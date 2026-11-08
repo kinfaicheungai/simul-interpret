@@ -33,27 +33,50 @@
     <details id="account" class="account">
       <summary><span data-i18n="account"></span> · <span id="account-state"></span></summary>
       <div class="account-body">
-        <fieldset>
-          <legend class="sr-only" data-i18n="account"></legend>
-          <label class="choice" id="choice-own"><input type="radio" name="mode" value="own"> <span data-i18n="modeOwn"></span></label>
-          <label class="choice" id="choice-owner"><input type="radio" name="mode" value="owner"> <span data-i18n="modeOwner"></span></label>
-        </fieldset>
-        <div id="own-fields">
-          <label><span data-i18n="apiKey"></span>
-            <input id="api-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-...">
+        <form id="login-form" class="account-body" autocomplete="on">
+          <label><span data-i18n="username"></span>
+            <input id="username" autocomplete="username" autocapitalize="off" spellcheck="false">
           </label>
-          <p class="hint" data-i18n="apiKeyHint"></p>
-        </div>
-        <div id="owner-fields">
           <label><span data-i18n="password"></span>
             <input id="password" type="password" autocomplete="current-password">
           </label>
+          <div id="key-field" hidden>
+            <label><span data-i18n="apiKey"></span>
+              <input id="api-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-...">
+            </label>
+            <p class="hint" data-i18n="apiKeyHint"></p>
+          </div>
+          <div class="controls">
+            <button id="login" type="submit" class="primary" data-i18n="login"></button>
+          </div>
+        </form>
+        <div id="logged-in" hidden>
+          <div class="controls">
+            <button id="logout" type="button" data-i18n="logout"></button>
+            <button id="show-change-key" type="button" data-i18n="changeKey" hidden></button>
+          </div>
         </div>
-        <div class="controls">
-          <button id="save-account" class="primary" data-i18n="save"></button>
-          <button id="forget-account" data-i18n="forget"></button>
-        </div>
+        <details id="own-key-box" hidden>
+          <summary data-i18n="noAccount"></summary>
+          <label><span data-i18n="apiKey"></span>
+            <input id="own-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-...">
+          </label>
+          <button id="save-own-key" type="button" data-i18n="useThisKey"></button>
+        </details>
         <p id="account-msg" class="hint" role="status"></p>
+      </div>
+    </details>
+
+    <details id="admin" class="account" hidden>
+      <summary data-i18n="manageUsers"></summary>
+      <div class="account-body">
+        <form id="new-user-form" class="row">
+          <input id="new-username" autocapitalize="off" spellcheck="false" aria-label="username" data-i18n-placeholder="newUserPlaceholder">
+          <button type="submit" class="primary" data-i18n="addUser"></button>
+        </form>
+        <div id="new-password" class="credentials" hidden></div>
+        <ul id="user-list" class="user-list"></ul>
+        <p id="admin-msg" class="hint" role="status"></p>
       </div>
     </details>
 

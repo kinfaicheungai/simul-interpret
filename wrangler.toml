@@ -14,10 +14,14 @@ enabled = true
 [assets]
 directory = "./public"
 binding = "ASSETS"
-# Run the Worker (Basic Auth) before serving any static file.
+# Run the Worker first so every response gets the security headers.
 run_worker_first = true
+
+# Users and login sessions. Created automatically on first deploy (no id needed).
+[[kv_namespaces]]
+binding = "USERS"
 
 [vars]
 MAX_SESSION_MINUTES = "30"
-ALLOW_OWN_KEY = "true"
+ALLOW_OWN_KEY = "false"
 SESSIONS_PER_MINUTE = "6"

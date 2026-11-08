@@ -5,17 +5,30 @@ const el = {
   audio: $('#audio'), language: $('#language'), noise: $('#noise'), download: $('#download'),
   clear: $('#clear'), source: $('#source'), target: $('#target'), uiLang: $('#ui-lang'),
   account: $('#account'), accountState: $('#account-state'), apiKey: $('#api-key'),
-  password: $('#password'), accountMsg: $('#account-msg'),
+  password: $('#password'), accountMsg: $('#account-msg'), username: $('#username'),
 };
 
 // ---------- Interface language ----------
 const STRINGS = {
   'zh-Hant': {
+    username: '用戶名', login: '登入', logout: '登出', changeKey: '更換 API key',
+    changeKeyHint: '請輸入密碼同新嘅 API key。', noAccount: '冇帳戶？直接用自己嘅 API key', useThisKey: '用呢個 key',
+    loggedInAdmin: '管理員 {name}', loggedInUser: '已登入：{name}', wrongLogin: '用戶名或密碼唔啱。',
+    firstLoginKey: '第一次登入：請輸入你自己嘅 OpenAI API key，之後喺任何裝置登入都會自動使用。',
+    loginOk: '已登入。', loggedOut: '已登出。',
+    manageUsers: '管理用戶', newUserPlaceholder: '新用戶名（英文細階／數字）', addUser: '新增用戶',
+    noUsers: '未有用戶。', userHasKey: '已設定 API key', userNoKey: '未登入過（未有 API key）', lastLogin: '最近登入 {date}',
+    resetPassword: '重設密碼', deleteUser: '刪除', confirmDelete: '再撳一次確認刪除',
+    shareCredentials: '將以下資料交俾對方：', passwordOnce: '密碼只會顯示呢一次。重設密碼後，對方要重新輸入 API key。',
+    copy: '複製', copied: '已複製',
+    adminErr_bad_username: '用戶名要 2–32 個英文細階字母、數字或 . _ -，而且唔可以同管理員一樣。',
+    adminErr_user_exists: '呢個用戶名已經有人用。', adminErr_no_user: '搵唔到呢個用戶。',
+    adminErr_storage_missing: '伺服器未設定用戶儲存（KV）。', adminErr_admin_only: '只有管理員可以做呢個操作。', adminErr_generic: '操作失敗，請再試。',
     uiLanguage: '介面語言',
     title: '即時傳譯', lead: '按開始後講嘢，網頁會持續收音，逐段顯示原文同譯文。請保持畫面喺前景。',
     account: '帳戶', notSet: '未設定', ownKeySet: '自己嘅 API key（…{last}）', ownerSet: '管理員',
     modeOwn: '用我自己嘅 OpenAI API key', modeOwner: '管理員密碼',
-    apiKey: 'OpenAI API key', apiKeyHint: 'Key 只會儲存喺呢部裝置，每次連線時經伺服器轉交 OpenAI，唔會被記錄。費用由你嘅 OpenAI 帳戶支付。',
+    apiKey: 'OpenAI API key', apiKeyHint: 'Key 會用你嘅密碼加密後儲存，冇密碼嘅人（包括管理員）都睇唔到。費用由你嘅 OpenAI 帳戶支付。',
     password: '密碼', save: '儲存', forget: '清除', saved: '已儲存。', forgotten: '已清除。',
     checking: '檢查緊…', wrongPassword: '密碼唔啱。', keyFormat: 'API key 應該以 sk- 開頭。',
     translateTo: '譯成', micDistance: '咪高峰距離',
@@ -23,7 +36,7 @@ const STRINGS = {
     start: '開始收音', stop: '停止', stopNow: '即刻結束', playVoice: '播放譯音', mute: '靜音',
     translation: '譯文', original: '原文', download: '下載字幕 (.txt)', clear: '清除字幕',
     note: '收音期間，聲音會傳送到 OpenAI 處理，按使用時間收費。播放譯音時請戴耳機，減少回音。可以無限時連續使用；連續 3 分鐘冇人講嘢會自動停止。網站唔會儲存錄音或字幕。',
-    idle: '等候開始', needAccount: '請先喺「帳戶」設定你嘅 API key 或密碼。',
+    idle: '等候開始', needAccount: '請先喺「帳戶」登入。',
     noSupport: '呢個瀏覽器唔支援收音或 WebRTC。請用 Safari / Chrome 開啟 HTTPS 網址。',
     micWait: '等候咪高峰權限…', connecting: '正在連接翻譯服務…', live: '收音及翻譯中',
     reconnecting: '連線中斷，自動重新連接中（第 {n} 次）…', unstable: '網絡不穩，嘗試恢復…',
@@ -32,7 +45,7 @@ const STRINGS = {
     micEnded: '咪高峰已中斷，請再按開始。', gaveUp: '多次重新連接失敗，已停止。請檢查網絡後再開始。',
     playFailed: '瀏覽器未能播放語音，請再按播放。字幕會繼續更新。', switchedTo: '［改為譯成 {lang}］',
     serviceError: '翻譯服務出錯：{detail}', callFailed: '翻譯連線失敗（{status}）。',
-    err_login_required: '密碼無效或已更改，請喺「帳戶」重新輸入。', err_key_format: 'API key 格式唔啱。',
+    err_login_required: '登入已過期或帳戶已更改，請喺「帳戶」重新登入。', err_key_format: 'API key 格式唔啱。',
     err_key_invalid: 'OpenAI 拒絕咗呢個 API key（無效或已停用）。', err_key_no_access: '呢個 API key 冇 Realtime Translation 權限。',
     err_key_quota: 'OpenAI 額度不足或請求太多，請檢查帳戶用量同付款設定。', err_too_many: '連線次數太多，請等一分鐘再試。',
     err_own_key_disabled: '呢個網站冇開放自備 API key。', err_unreachable: '暫時連接唔到 OpenAI，請稍後再試。',
@@ -40,11 +53,24 @@ const STRINGS = {
     exportTitle: '即時傳譯字幕',
   },
   'zh-Hans': {
+    username: '用户名', login: '登录', logout: '退出登录', changeKey: '更换 API key',
+    changeKeyHint: '请输入密码和新的 API key。', noAccount: '没有账户？直接用自己的 API key', useThisKey: '使用这个 key',
+    loggedInAdmin: '管理员 {name}', loggedInUser: '已登录：{name}', wrongLogin: '用户名或密码不正确。',
+    firstLoginKey: '首次登录：请输入你自己的 OpenAI API key，之后在任何设备登录都会自动使用。',
+    loginOk: '已登录。', loggedOut: '已退出登录。',
+    manageUsers: '管理用户', newUserPlaceholder: '新用户名（小写英文／数字）', addUser: '新增用户',
+    noUsers: '暂无用户。', userHasKey: '已设置 API key', userNoKey: '未登录过（未有 API key）', lastLogin: '最近登录 {date}',
+    resetPassword: '重设密码', deleteUser: '删除', confirmDelete: '再按一次确认删除',
+    shareCredentials: '把以下信息发给对方：', passwordOnce: '密码只显示这一次。重设密码后，对方需要重新输入 API key。',
+    copy: '复制', copied: '已复制',
+    adminErr_bad_username: '用户名需为 2–32 个小写英文字母、数字或 . _ -，且不能与管理员相同。',
+    adminErr_user_exists: '这个用户名已被使用。', adminErr_no_user: '找不到这个用户。',
+    adminErr_storage_missing: '服务器未设置用户存储（KV）。', adminErr_admin_only: '只有管理员可以执行此操作。', adminErr_generic: '操作失败，请重试。',
     uiLanguage: '界面语言',
     title: '实时传译', lead: '按开始后说话，网页会持续收音，逐段显示原文和译文。请保持画面在前台。',
     account: '账户', notSet: '未设置', ownKeySet: '自己的 API key（…{last}）', ownerSet: '管理员',
     modeOwn: '使用我自己的 OpenAI API key', modeOwner: '管理员密码',
-    apiKey: 'OpenAI API key', apiKeyHint: 'Key 只保存在这台设备上，每次连接时经服务器转交 OpenAI，不会被记录。费用由你的 OpenAI 账户支付。',
+    apiKey: 'OpenAI API key', apiKeyHint: 'Key 会用你的密码加密后保存，没有密码的人（包括管理员）都无法查看。费用由你的 OpenAI 账户支付。',
     password: '密码', save: '保存', forget: '清除', saved: '已保存。', forgotten: '已清除。',
     checking: '检查中…', wrongPassword: '密码不正确。', keyFormat: 'API key 应以 sk- 开头。',
     translateTo: '译成', micDistance: '麦克风距离',
@@ -52,7 +78,7 @@ const STRINGS = {
     start: '开始收音', stop: '停止', stopNow: '立即结束', playVoice: '播放译音', mute: '静音',
     translation: '译文', original: '原文', download: '下载字幕 (.txt)', clear: '清除字幕',
     note: '收音期间，声音会发送到 OpenAI 处理，按使用时间计费。播放译音时请戴耳机，减少回声。可无限时连续使用；连续 3 分钟没人说话会自动停止。网站不会保存录音或字幕。',
-    idle: '等待开始', needAccount: '请先在「账户」设置你的 API key 或密码。',
+    idle: '等待开始', needAccount: '请先在「账户」登录。',
     noSupport: '此浏览器不支持收音或 WebRTC。请用 Safari / Chrome 打开 HTTPS 网址。',
     micWait: '等待麦克风权限…', connecting: '正在连接翻译服务…', live: '收音及翻译中',
     reconnecting: '连接中断，正在自动重连（第 {n} 次）…', unstable: '网络不稳定，尝试恢复…',
@@ -61,7 +87,7 @@ const STRINGS = {
     micEnded: '麦克风已中断，请再按开始。', gaveUp: '多次重连失败，已停止。请检查网络后再开始。',
     playFailed: '浏览器未能播放语音，请再按播放。字幕会继续更新。', switchedTo: '［改为译成 {lang}］',
     serviceError: '翻译服务出错：{detail}', callFailed: '翻译连接失败（{status}）。',
-    err_login_required: '密码无效或已更改，请在「账户」重新输入。', err_key_format: 'API key 格式不正确。',
+    err_login_required: '登录已过期或账户已更改，请在「账户」重新登录。', err_key_format: 'API key 格式不正确。',
     err_key_invalid: 'OpenAI 拒绝了这个 API key（无效或已停用）。', err_key_no_access: '这个 API key 没有 Realtime Translation 权限。',
     err_key_quota: 'OpenAI 额度不足或请求过多，请检查账户用量和付款设置。', err_too_many: '连接次数过多，请等一分钟再试。',
     err_own_key_disabled: '本网站未开放自备 API key。', err_unreachable: '暂时无法连接 OpenAI，请稍后再试。',
@@ -69,11 +95,24 @@ const STRINGS = {
     exportTitle: '实时传译字幕',
   },
   en: {
+    username: 'Username', login: 'Log in', logout: 'Log out', changeKey: 'Change API key',
+    changeKeyHint: 'Enter your password and the new API key.', noAccount: 'No account? Use your own API key', useThisKey: 'Use this key',
+    loggedInAdmin: 'Admin {name}', loggedInUser: 'Logged in: {name}', wrongLogin: 'Wrong username or password.',
+    firstLoginKey: 'First login: enter your own OpenAI API key. It will be used automatically whenever you log in, on any device.',
+    loginOk: 'Logged in.', loggedOut: 'Logged out.',
+    manageUsers: 'Manage users', newUserPlaceholder: 'New username (lowercase / digits)', addUser: 'Add user',
+    noUsers: 'No users yet.', userHasKey: 'API key set', userNoKey: 'Not logged in yet (no API key)', lastLogin: 'last login {date}',
+    resetPassword: 'Reset password', deleteUser: 'Delete', confirmDelete: 'Tap again to delete',
+    shareCredentials: 'Send these details to the person:', passwordOnce: 'The password is shown only once. After a reset, the user must enter their API key again.',
+    copy: 'Copy', copied: 'Copied',
+    adminErr_bad_username: 'Usernames are 2–32 lowercase letters, digits or . _ - and cannot match the admin name.',
+    adminErr_user_exists: 'That username is taken.', adminErr_no_user: 'User not found.',
+    adminErr_storage_missing: 'User storage (KV) is not set up on the server.', adminErr_admin_only: 'Only the admin can do this.', adminErr_generic: 'Something went wrong. Try again.',
     uiLanguage: 'Interface language',
     title: 'Live Interpreter', lead: 'Press Start and speak. The page keeps listening and shows the original and the translation as you go. Keep the screen in the foreground.',
     account: 'Account', notSet: 'not set', ownKeySet: 'own API key (…{last})', ownerSet: 'admin',
     modeOwn: 'Use my own OpenAI API key', modeOwner: 'Admin password',
-    apiKey: 'OpenAI API key', apiKeyHint: 'Your key is stored only on this device and passed to OpenAI through the server for each connection. It is never logged. Usage is billed to your OpenAI account.',
+    apiKey: 'OpenAI API key', apiKeyHint: 'Your key is stored encrypted with your password; nobody without it (the admin included) can read it. Usage is billed to your OpenAI account.',
     password: 'Password', save: 'Save', forget: 'Clear', saved: 'Saved.', forgotten: 'Cleared.',
     checking: 'Checking…', wrongPassword: 'Wrong password.', keyFormat: 'The API key should start with sk-.',
     translateTo: 'Translate to', micDistance: 'Microphone distance',
@@ -81,7 +120,7 @@ const STRINGS = {
     start: 'Start', stop: 'Stop', stopNow: 'End now', playVoice: 'Play voice', mute: 'Mute',
     translation: 'Translation', original: 'Original', download: 'Download (.txt)', clear: 'Clear',
     note: 'While listening, audio is sent to OpenAI and billed by time. Use headphones when playing the voice to avoid echo. Runs as long as you need; it stops by itself after 3 minutes of silence. Nothing is stored on this site.',
-    idle: 'Ready', needAccount: 'Set your API key or password under “Account” first.',
+    idle: 'Ready', needAccount: 'Log in under “Account” first.',
     noSupport: 'This browser does not support microphone or WebRTC. Open the HTTPS address in Safari or Chrome.',
     micWait: 'Waiting for microphone permission…', connecting: 'Connecting…', live: 'Listening and translating',
     reconnecting: 'Connection lost, reconnecting (attempt {n})…', unstable: 'Network unstable, recovering…',
@@ -90,7 +129,7 @@ const STRINGS = {
     micEnded: 'Microphone disconnected. Press Start again.', gaveUp: 'Reconnecting failed several times. Check the network and start again.',
     playFailed: 'The browser could not play audio. Press play again; subtitles keep updating.', switchedTo: '[Now translating to {lang}]',
     serviceError: 'Translation service error: {detail}', callFailed: 'Connection failed ({status}).',
-    err_login_required: 'Password invalid or changed. Re-enter it under “Account”.', err_key_format: 'API key format is invalid.',
+    err_login_required: 'Login expired or the account changed. Log in again under “Account”.', err_key_format: 'API key format is invalid.',
     err_key_invalid: 'OpenAI rejected this API key (invalid or disabled).', err_key_no_access: 'This API key has no access to Realtime Translation.',
     err_key_quota: 'OpenAI quota exceeded or rate limited. Check usage and billing.', err_too_many: 'Too many connections. Wait a minute and try again.',
     err_own_key_disabled: 'This site does not accept personal API keys.', err_unreachable: 'Cannot reach OpenAI right now. Try again later.',
@@ -128,6 +167,7 @@ function applyUiLang() {
   document.documentElement.lang = uiLang;
   document.title = t('title');
   for (const node of document.querySelectorAll('[data-i18n]')) node.textContent = t(node.dataset.i18n);
+  for (const node of document.querySelectorAll('[data-i18n-placeholder]')) node.placeholder = t(node.dataset.i18nPlaceholder);
   el.stop.textContent = recording?.stopping ? t('stopNow') : t('stop');
   el.sound.textContent = el.audio.muted ? t('playVoice') : t('mute');
   setStatus(statusState.key, statusState.vars);
@@ -135,68 +175,187 @@ function applyUiLang() {
 }
 
 // ---------- Account ----------
-const OWNER_USER = 'interpreter';
-let serverConfig = { maxMinutes: 30, languages: Object.keys(LANGUAGE_NAMES), ownerEnabled: true, ownKeyEnabled: true };
+let serverConfig = { maxMinutes: 30, languages: Object.keys(LANGUAGE_NAMES), ownKeyEnabled: false, accounts: true };
 
+// Stored on this device: a login token (admin or user), or a pasted API key.
 function getAccount() {
   const mode = store.get('mode');
+  if (mode === 'token' && store.get('token')) return { mode, token: store.get('token'), role: store.get('role'), username: store.get('username') };
   if (mode === 'own' && store.get('apiKey')) return { mode, apiKey: store.get('apiKey') };
-  if (mode === 'owner' && store.get('password')) return { mode, password: store.get('password') };
   return null;
 }
 function authHeaders(account) {
   if (account.mode === 'own') return { 'X-OpenAI-Key': account.apiKey };
-  return { Authorization: 'Basic ' + btoa(OWNER_USER + ':' + account.password) };
+  return { Authorization: 'Bearer ' + account.token };
 }
-function selectedMode() { return document.querySelector('input[name=mode]:checked')?.value; }
+function clearAccount() { ['mode', 'token', 'role', 'username', 'apiKey', 'password'].forEach(store.remove); }
+
+let needKey = false;
 function renderAccount() {
   const account = getAccount();
   el.accountState.textContent = !account ? t('notSet')
-    : account.mode === 'own' ? t('ownKeySet', { last: account.apiKey.slice(-4) }) : t('ownerSet');
-  const mode = selectedMode();
-  $('#own-fields').hidden = mode !== 'own';
-  $('#owner-fields').hidden = mode !== 'owner';
+    : account.mode === 'own' ? t('ownKeySet', { last: account.apiKey.slice(-4) })
+    : account.role === 'owner' ? t('loggedInAdmin', { name: account.username })
+    : t('loggedInUser', { name: account.username });
+  const loggedIn = Boolean(account);
+  $('#login-form').hidden = loggedIn && !needKey;
+  $('#logged-in').hidden = !loggedIn || needKey;
+  $('#show-change-key').hidden = account?.role !== 'user';
+  $('#key-field').hidden = !needKey;
+  $('#own-key-box').hidden = loggedIn || !serverConfig.ownKeyEnabled;
+  $('#admin').hidden = account?.role !== 'owner';
 }
-function initAccount() {
-  $('#choice-owner').hidden = !serverConfig.ownerEnabled;
-  $('#choice-own').hidden = !serverConfig.ownKeyEnabled;
-  const account = getAccount();
-  const mode = account?.mode ?? (serverConfig.ownKeyEnabled ? 'own' : 'owner');
-  const radio = document.querySelector(`input[name=mode][value=${mode}]`);
-  if (radio) radio.checked = true;
-  if (!account) el.account.open = true;
-  renderAccount();
-}
-for (const radio of document.querySelectorAll('input[name=mode]')) radio.addEventListener('change', renderAccount);
 
-$('#save-account').addEventListener('click', async () => {
-  const mode = selectedMode();
-  if (mode === 'own') {
-    const key = el.apiKey.value.trim();
-    if (!/^sk-\S{20,}$/.test(key)) { el.accountMsg.textContent = t('keyFormat'); return; }
-    store.set('mode', 'own'); store.set('apiKey', key); store.remove('password');
-  } else if (mode === 'owner') {
-    const password = el.password.value;
-    el.accountMsg.textContent = t('checking');
-    let ok = false;
-    try {
-      const response = await fetch('/login', { method: 'POST', headers: authHeaders({ mode, password }) });
-      ok = response.ok;
-    } catch {}
-    if (!ok) { el.accountMsg.textContent = t('wrongPassword'); return; }
-    store.set('mode', 'owner'); store.set('password', password); store.remove('apiKey');
+async function api(path, { method = 'GET', body, auth = true } = {}) {
+  const headers = {};
+  const account = getAccount();
+  if (auth && account?.mode === 'token') headers.Authorization = 'Bearer ' + account.token;
+  if (body) headers['Content-Type'] = 'application/json';
+  const response = await fetch(path, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  let data = {};
+  try { data = await response.json(); } catch {}
+  return { ok: response.ok, status: response.status, data };
+}
+
+$('#login-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const username = el.username.value.trim().toLowerCase();
+  const password = el.password.value;
+  const apiKey = el.apiKey.value.trim();
+  if (needKey && !/^sk-\S{20,}$/.test(apiKey)) { el.accountMsg.textContent = t('keyFormat'); return; }
+  el.accountMsg.textContent = t('checking');
+  let result;
+  try { result = await api('/login', { method: 'POST', auth: false, body: { username, password, apiKey: needKey ? apiKey : undefined } }); }
+  catch { el.accountMsg.textContent = t('err_unreachable'); return; }
+  if (result.status === 409 && result.data.error === 'need_key') {
+    needKey = true;
+    renderAccount();
+    el.accountMsg.textContent = t('firstLoginKey');
+    el.apiKey.focus();
+    return;
   }
-  el.apiKey.value = '';
+  if (!result.ok) {
+    el.accountMsg.textContent = result.data.error === 'key_format' ? t('keyFormat')
+      : result.data.error === 'too_many' ? t('err_too_many') : t('wrongLogin');
+    return;
+  }
+  clearAccount();
+  store.set('mode', 'token');
+  store.set('token', result.data.token);
+  store.set('role', result.data.role);
+  store.set('username', result.data.username);
+  needKey = false;
   el.password.value = '';
+  el.apiKey.value = '';
+  el.accountMsg.textContent = t('loginOk');
+  renderAccount();
+  if (result.data.role === 'owner') loadUsers();
+  else el.account.open = false;
+});
+
+$('#logout').addEventListener('click', async () => {
+  const account = getAccount();
+  if (account?.mode === 'token') api('/logout', { method: 'POST' }).catch(() => {});
+  clearAccount();
+  needKey = false;
+  el.accountMsg.textContent = t('loggedOut');
+  renderAccount();
+});
+$('#show-change-key').addEventListener('click', () => {
+  // Changing the stored key needs the password, because the key is encrypted with it.
+  el.username.value = store.get('username') ?? '';
+  needKey = true;
+  renderAccount();
+  el.accountMsg.textContent = t('changeKeyHint');
+  el.password.focus();
+});
+$('#save-own-key').addEventListener('click', () => {
+  const key = $('#own-key').value.trim();
+  if (!/^sk-\S{20,}$/.test(key)) { el.accountMsg.textContent = t('keyFormat'); return; }
+  clearAccount();
+  store.set('mode', 'own');
+  store.set('apiKey', key);
+  $('#own-key').value = '';
   el.accountMsg.textContent = t('saved');
   renderAccount();
-  el.account.open = false;
 });
-$('#forget-account').addEventListener('click', () => {
-  ['mode', 'apiKey', 'password'].forEach(store.remove);
-  el.accountMsg.textContent = t('forgotten');
+
+// ----- Admin: manage users -----
+function showAdminError(data) {
+  $('#admin-msg').textContent = t('adminErr_' + (data.error ?? 'generic'));
+}
+async function loadUsers() {
+  const list = $('#user-list');
+  const result = await api('/admin/users').catch(() => ({ ok: false, data: {} }));
+  if (!result.ok) {
+    if (result.status === 403) { clearAccount(); renderAccount(); el.accountMsg.textContent = t('err_login_required'); }
+    else showAdminError(result.data);
+    return;
+  }
+  list.replaceChildren();
+  if (!result.data.users.length) {
+    list.append(Object.assign(document.createElement('li'), { className: 'hint', textContent: t('noUsers') }));
+  }
+  for (const user of result.data.users) {
+    const item = document.createElement('li');
+    const info = document.createElement('div');
+    const name = Object.assign(document.createElement('strong'), { textContent: user.username });
+    const meta = Object.assign(document.createElement('span'), {
+      className: 'hint',
+      textContent: (user.hasKey ? t('userHasKey') : t('userNoKey')) + (user.lastLogin ? ' · ' + t('lastLogin', { date: user.lastLogin.slice(0, 10) }) : ''),
+    });
+    info.append(name, document.createElement('br'), meta);
+    const reset = Object.assign(document.createElement('button'), { type: 'button', textContent: t('resetPassword') });
+    reset.addEventListener('click', () => adminAction('reset', user.username));
+    const remove = Object.assign(document.createElement('button'), { type: 'button', textContent: t('deleteUser') });
+    remove.addEventListener('click', () => {
+      if (remove.dataset.confirm) return adminAction('delete', user.username);
+      remove.dataset.confirm = '1';
+      remove.textContent = t('confirmDelete');
+      setTimeout(() => { delete remove.dataset.confirm; remove.textContent = t('deleteUser'); }, 4000);
+    });
+    const actions = document.createElement('div');
+    actions.className = 'controls';
+    actions.append(reset, remove);
+    item.append(info, actions);
+    list.append(item);
+  }
+}
+async function adminAction(action, username) {
+  $('#admin-msg').textContent = '';
+  const result = await api('/admin/users/' + action, { method: 'POST', body: { username } }).catch(() => ({ ok: false, data: {} }));
+  if (!result.ok) return showAdminError(result.data);
+  const box = $('#new-password');
+  if (result.data.password) {
+    box.replaceChildren(
+      Object.assign(document.createElement('p'), { textContent: t('shareCredentials') }),
+      Object.assign(document.createElement('pre'), { textContent: `${location.origin}\n${t('username')}: ${result.data.username}\n${t('password')}: ${result.data.password}` }),
+      Object.assign(document.createElement('p'), { className: 'hint', textContent: t('passwordOnce') }),
+    );
+    const copy = Object.assign(document.createElement('button'), { type: 'button', textContent: t('copy') });
+    copy.addEventListener('click', () => navigator.clipboard?.writeText(box.querySelector('pre').textContent).then(() => { copy.textContent = t('copied'); }));
+    box.append(copy);
+    box.hidden = false;
+  } else {
+    box.hidden = true;
+  }
+  loadUsers();
+}
+$('#new-user-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const username = $('#new-username').value.trim().toLowerCase();
+  if (!/^[a-z0-9._-]{2,32}$/.test(username)) { $('#admin-msg').textContent = t('adminErr_bad_username'); return; }
+  await adminAction('create', username);
+  $('#new-username').value = '';
+});
+$('#admin').addEventListener('toggle', () => { if ($('#admin').open) loadUsers(); });
+
+function initAccount() {
+  // Logins from v1.3 and earlier (admin password stored on device) are no longer valid.
+  if (store.get('mode') === 'owner') clearAccount();
+  if (!getAccount()) el.account.open = true;
   renderAccount();
-});
+}
 
 // ---------- Transcript ----------
 const PARAGRAPH_GAP_MS = 1500;   // pause that starts a new paragraph

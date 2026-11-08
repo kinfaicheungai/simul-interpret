@@ -1,5 +1,5 @@
 // Cloudflare Workers entry point. Static files in public/ are served through the
-// ASSETS binding, but only after the Basic Auth check in createHandler.
+// ASSETS binding; users and sessions live in the USERS KV namespace.
 import { createHandler, loadConfig } from './app.js';
 
 let cached;
@@ -10,6 +10,7 @@ export default {
       try {
         const config = loadConfig(env);
         cached = createHandler(config, {
+          kv: env.USERS,
           serveAsset: async request => {
             const response = await env.ASSETS.fetch(request);
             return response.status === 404 ? null : response;

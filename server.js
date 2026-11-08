@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { Readable } from 'node:stream';
 import { pathToFileURL } from 'node:url';
-import { createHandler, loadConfig } from './src/app.js';
+import { MemoryKV, createHandler, loadConfig } from './src/app.js';
 
 const TYPES = {
   html: 'text/html; charset=utf-8', js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8',
@@ -22,8 +22,9 @@ function staticAssets() {
   };
 }
 
-export function createApp(env, { fetchImpl } = {}) {
-  const handle = createHandler(loadConfig(env), { serveAsset: staticAssets(), fetchImpl });
+// Users and sessions are kept in memory locally and vanish on restart.
+export function createApp(env, { fetchImpl, kv = new MemoryKV() } = {}) {
+  const handle = createHandler(loadConfig(env), { serveAsset: staticAssets(), fetchImpl, kv });
   return createServer(async (req, res) => {
     try {
       const hasBody = req.method !== 'GET' && req.method !== 'HEAD';
