@@ -1,0 +1,15 @@
+# Cloudflare Workers config. Secrets (OPENAI_API_KEY, APP_PASSWORD) are set in the
+# Cloudflare dashboard or with `npx wrangler secret put`, never in this file.
+name = "simul-interpret"
+main = "src/worker.js"
+compatibility_date = "2025-09-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+# Run the Worker (Basic Auth) before serving any static file.
+run_worker_first = true
+
+[vars]
+MAX_SESSION_MINUTES = "10"
+SESSIONS_PER_MINUTE = "6"

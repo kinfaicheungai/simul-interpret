@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import { after, before, test } from 'node:test';
-import { createApp, loadConfig } from '../server.js';
+import { createApp } from '../server.js';
+import { loadConfig } from '../src/app.js';
+import worker from '../src/worker.js';
 
-const config = loadConfig({ OPENAI_API_KEY: 'sk-test', APP_PASSWORD: 'a'.repeat(24) });
+const env = { OPENAI_API_KEY: 'sk-test', APP_PASSWORD: 'a'.repeat(24) };
 const auth = 'Basic ' + Buffer.from('interpreter:' + 'a'.repeat(24)).toString('base64');
 let upstreamCalls = [];
 let base;
@@ -13,7 +15,7 @@ before(async () => {
     upstreamCalls.push({ url, body: JSON.parse(init.body) });
     return new Response(JSON.stringify({ value: 'ek_test', expires_at: 1 }), { status: 200 });
   };
-  server = createApp({ ...config, perMinute: 3 }, { fetchImpl: fakeFetch });
+  server = createApp({ ...env, SESSIONS_PER_MINUTE: '3' }, { fetchImpl: fakeFetch });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   base = `http://127.0.0.1:${server.address().port}`;
 });
@@ -64,4 +66,18 @@ test('session is rate limited', async () => {
   assert.equal((await session({})).status, 200);
   assert.equal((await session({})).status, 200);
   assert.equal((await session({})).status, 429);
+});
+
+test('Cloudflare worker guards static assets behind login', async () => {
+  const assetEnv = { ...env, ASSETS: { fetch: async req => new URL(req.url).pathname === '/'
+    ? new Response('<html>', { headers: { 'Content-Type': 'text/html' } })
+    : new Response('nope', { status: 404 }) } };
+  const call = (path, headers = {}) => worker.fetch(new Request('https://x.workers.dev' + path, { headers }), assetEnv);
+  assert.equal((await call('/healthz')).status, 200);
+  assert.equal((await call('/')).status, 401);
+  const page = await call('/', { Authorization: auth });
+  assert.equal(page.status, 200);
+  assert.equal(await page.text(), '<html>');
+  assert.ok(page.headers.get('content-security-policy'));
+  assert.equal((await call('/missing', { Authorization: auth })).status, 404);
 });

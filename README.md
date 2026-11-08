@@ -2,7 +2,7 @@
 
 用手機（iPhone Safari／Chrome）持續收音，透過 OpenAI Realtime Translation（`gpt-realtime-translate`）逐段將講者嘅說話翻譯成另一種語言，同步顯示**原文字幕**、**譯文字幕**，並可播放**譯音**。
 
-- 後端：Node.js 22，零第三方依賴（`server.js`）
+- 後端：Cloudflare Workers（`src/worker.js` + `src/app.js`）；本機開發用 Node.js 22（`server.js`），零第三方依賴
 - 前端：純 HTML/CSS/JS（`public/`），可加入 iPhone 主畫面當 App 用
 - 音訊經 WebRTC 由瀏覽器直送 OpenAI；伺服器只負責發短期連線憑證，**唔儲存錄音或字幕**
 
@@ -26,7 +26,7 @@ npm start
 ```
 
 打開 http://localhost:3000，用戶名 `interpreter`（可用 `APP_USERNAME` 改），密碼係 `APP_PASSWORD`。
-iPhone 收音一定要用 HTTPS，所以手機測試請用下面部署後嘅網址。
+iPhone 收音一定要用 HTTPS，所以手機測試請用下面部署後嘅網址。\n\n本機用 `.env` 設定；Cloudflare 上面嘅設定見下面部署部分（`MAX_SESSION_MINUTES` 等喺 `wrangler.toml` 改）。
 
 | 環境變數 | 必填 | 說明 |
 |---|---|---|
@@ -35,7 +35,7 @@ iPhone 收音一定要用 HTTPS，所以手機測試請用下面部署後嘅網�
 | `APP_USERNAME` | | 預設 `interpreter` |
 | `MAX_SESSION_MINUTES` | | 每次收音上限，預設 10（1–120） |
 | `SESSIONS_PER_MINUTE` | | 每分鐘最多開幾次連線，預設 6 |
-| `HOST` / `PORT` | | 預設 `127.0.0.1` / `3000`；雲端部署設 `HOST=0.0.0.0` |
+| `HOST` / `PORT` | | 本機用，預設 `127.0.0.1` / `3000` |
 
 ## 測試
 
@@ -45,15 +45,20 @@ npm test
 
 每次 push 去 GitHub 都會自動跑 CI（`.github/workflows/ci.yml`）。
 
-## 部署到 Render
+## 部署到 Cloudflare Workers
 
-Repo 已附 `render.yaml`：
+Repo 已附 `wrangler.toml`，網頁同後端一齊放喺同一個 Worker。
 
-1. Render Dashboard →「New」→「Blueprint」→ 揀呢個 GitHub repo
-2. 喺提示中自己填 `OPENAI_API_KEY` 同 `APP_PASSWORD`（唔好寫入 repo）
-3. 部署完成後用 iPhone Safari 開 Render 畀嘅 `https://….onrender.com` 網址並登入
+1. Cloudflare Dashboard →「Workers & Pages」→「Create」→「Import a repository」→ 揀 GitHub 上嘅 `simul-interpret`
+2. Build 設定保持預設（Deploy command：`npx wrangler deploy`），撳「Deploy」
+3. 部署完成後去呢個 Worker →「Settings」→「Variables and Secrets」→「Add」，類型揀 **Secret**，加入：
+   - `OPENAI_API_KEY`
+   - `APP_PASSWORD`（20+ 個字元）
+4. 用 iPhone Safari 開 `https://simul-interpret.<你的帳戶>.workers.dev`，用 `interpreter` 同密碼登入
 
-> Render 免費方案閒置後會休眠，第一次開可能要等 30–60 秒。
+之後每次 push 去 `main`，Cloudflare 會自動重新部署。
+
+> 想喺本機用 Cloudflare 環境測試：建立 `.dev.vars`（格式同 `.env`），再 `npm run dev:cf`。
 
 ## iPhone 驗收清單
 
@@ -67,7 +72,7 @@ Repo 已附 `render.yaml`：
 ## 運作原理
 
 ```
-iPhone ──(Basic Auth) POST /session──▶ server.js ──(API key)──▶ OpenAI /realtime/translations/client_secrets
+iPhone ──(Basic Auth) POST /session──▶ Worker    ──(API key)──▶ OpenAI /realtime/translations/client_secrets
    │                                       ◀────── 60 秒短期憑證 ek_… ──────┘
    └──WebRTC SDP (ek_…)──▶ OpenAI /realtime/translations/calls
         咪高峰音軌 ──▶          ◀── 譯音音軌 + 資料通道（原文／譯文字幕 delta）
