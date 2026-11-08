@@ -26,7 +26,9 @@ npm start
 ```
 
 打開 http://localhost:3000，用戶名 `interpreter`（可用 `APP_USERNAME` 改），密碼係 `APP_PASSWORD`。
-iPhone 收音一定要用 HTTPS，所以手機測試請用下面部署後嘅網址。\n\n本機用 `.env` 設定；Cloudflare 上面嘅設定見下面部署部分（`MAX_SESSION_MINUTES` 等喺 `wrangler.toml` 改）。
+iPhone 收音一定要用 HTTPS，所以手機測試請用下面部署後嘅網址。
+
+本機用 `.env` 設定；Cloudflare 上面嘅設定見下面部署部分（`MAX_SESSION_MINUTES` 等喺 `wrangler.toml` 改）。
 
 | 環境變數 | 必填 | 說明 |
 |---|---|---|
