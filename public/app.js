@@ -11,6 +11,19 @@ const el = {
 // ---------- Interface language ----------
 const STRINGS = {
   'zh-Hant': {
+    keyHelpButton: '❓ 點樣攞 OpenAI API key？', firstTimeHelp: '❓ 第一次用？睇點樣準備 OpenAI API key', helpClose: '明白',
+    helpTitle: '點樣申請 OpenAI API key？',
+    helpIntro: 'API key 就好似一條專屬鎖匙：App 用佢幫你連接 OpenAI 做翻譯，費用直接計落你自己嘅 OpenAI 帳戶，唔會用到其他人嘅錢。注意：ChatGPT Plus 訂閱同 API 係分開收費，就算有 Plus 都要另外增值。大約 5 分鐘就搞掂。',
+    help1: '註冊或登入 OpenAI 開發者平台（可以用 email 或 Google 帳戶，同 ChatGPT 帳戶一樣都得）。',
+    help2: '增值：去 Billing 頁，撳「Add credit」或「Add payment details」，加信用卡並增值（最少約 US$5）。',
+    help3: '建立 key：去 API keys 頁，撳「Create new secret key」，名可以隨便改（例如 interpreter），再撳「Create secret key」。',
+    help4: '即刻撳「Copy」複製。Key 係一長串以「sk-」開頭嘅字，只會顯示一次；如果唔見咗，就重新建立一條。',
+    help5: '返嚟呢個 App，喺「OpenAI API key」格貼上，再撳「登入」。完成！',
+    helpTipsTitle: '小貼士', helpLink: '打開頁面 ↗',
+    tip1: 'Key 好似密碼咁，唔好傳俾其他人；俾人用咗，費用會計落你個帳戶。',
+    tip2: '用咗幾多錢，可以喺 OpenAI 嘅 Usage 頁睇。',
+    tip3: '建議唔好開「自動增值」（auto recharge），用完先再增值，就唔會超支。',
+    tip4: '如果 App 話 key 冇權限或者額度不足，通常係未增值，或者啱啱增值要等幾分鐘。',
     changePassword: '改密碼', currentPassword: '目前密碼', newPassword: '新密碼', confirmPassword: '再輸入一次新密碼', passwordRule: '新密碼最少 10 個字元（英文、數字或符號，唔可以有空格）。', savePassword: '儲存新密碼', cancel: '取消', passwordChanged: '密碼已更改，其他裝置會自動登出。', passwordMismatch: '兩次輸入嘅新密碼唔一樣。', wrongCurrentPassword: '目前密碼唔啱。',
     username: '用戶名', login: '登入', logout: '登出', changeKey: '更換 API key',
     changeKeyHint: '請輸入密碼同新嘅 API key。', noAccount: '冇帳戶？直接用自己嘅 API key', useThisKey: '用呢個 key',
@@ -54,6 +67,19 @@ const STRINGS = {
     exportTitle: '即時傳譯字幕',
   },
   'zh-Hans': {
+    keyHelpButton: '❓ 如何获取 OpenAI API key？', firstTimeHelp: '❓ 第一次使用？看看如何准备 OpenAI API key', helpClose: '明白',
+    helpTitle: '如何申请 OpenAI API key？',
+    helpIntro: 'API key 就像一把专属钥匙：App 用它帮你连接 OpenAI 翻译，费用直接计入你自己的 OpenAI 账户，不会用到别人的钱。注意：ChatGPT Plus 订阅与 API 分开收费，即使有 Plus 也要另外充值。大约 5 分钟即可完成。',
+    help1: '注册或登录 OpenAI 开发者平台（可用 email 或 Google 账户，与 ChatGPT 账户相同也可以）。',
+    help2: '充值：打开 Billing 页面，点「Add credit」或「Add payment details」，添加信用卡并充值（最少约 US$5）。',
+    help3: '创建 key：打开 API keys 页面，点「Create new secret key」，名称可随意（例如 interpreter），再点「Create secret key」。',
+    help4: '立即点「Copy」复制。Key 是一长串以「sk-」开头的字符，只显示一次；如果丢失，重新创建一条即可。',
+    help5: '回到本 App，在「OpenAI API key」框粘贴，再点「登录」。完成！',
+    helpTipsTitle: '小贴士', helpLink: '打开页面 ↗',
+    tip1: 'Key 像密码一样，不要发给别人；被别人使用，费用会计入你的账户。',
+    tip2: '用了多少钱，可以在 OpenAI 的 Usage 页面查看。',
+    tip3: '建议不要开启「自动充值」（auto recharge），用完再充值，就不会超支。',
+    tip4: '如果 App 提示 key 没有权限或额度不足，通常是还没充值，或刚充值需要等几分钟。',
     changePassword: '修改密码', currentPassword: '当前密码', newPassword: '新密码', confirmPassword: '再次输入新密码', passwordRule: '新密码至少 10 个字符（英文、数字或符号，不能有空格）。', savePassword: '保存新密码', cancel: '取消', passwordChanged: '密码已修改，其他设备会自动退出登录。', passwordMismatch: '两次输入的新密码不一致。', wrongCurrentPassword: '当前密码不正确。',
     username: '用户名', login: '登录', logout: '退出登录', changeKey: '更换 API key',
     changeKeyHint: '请输入密码和新的 API key。', noAccount: '没有账户？直接用自己的 API key', useThisKey: '使用这个 key',
@@ -97,6 +123,19 @@ const STRINGS = {
     exportTitle: '实时传译字幕',
   },
   en: {
+    keyHelpButton: '❓ How do I get an OpenAI API key?', firstTimeHelp: '❓ First time? How to get an OpenAI API key', helpClose: 'Got it',
+    helpTitle: 'How to get an OpenAI API key',
+    helpIntro: 'An API key is like a personal key: the app uses it to connect to OpenAI for translation, and usage is billed to your own OpenAI account. Note: a ChatGPT Plus subscription is billed separately from the API, so you still need to add API credit. It takes about 5 minutes.',
+    help1: 'Sign up or log in to the OpenAI developer platform (email or Google works; your ChatGPT login is fine).',
+    help2: 'Add credit: open the Billing page, choose “Add credit” or “Add payment details”, add a card and top up (minimum about US$5).',
+    help3: 'Create a key: open the API keys page, choose “Create new secret key”, give it any name (e.g. interpreter), then “Create secret key”.',
+    help4: 'Copy it right away. The key is a long string starting with “sk-” and is shown only once; if you lose it, just create a new one.',
+    help5: 'Come back here, paste it into the “OpenAI API key” box and log in. Done!',
+    helpTipsTitle: 'Tips', helpLink: 'Open page ↗',
+    tip1: 'Treat the key like a password; anyone who has it can spend your credit.',
+    tip2: 'See how much you have spent on OpenAI’s Usage page.',
+    tip3: 'Consider leaving “auto recharge” off so you never spend more than you topped up.',
+    tip4: 'If the app says the key has no access or no quota, you usually have not added credit yet, or it can take a few minutes after topping up.',
     changePassword: 'Change password', currentPassword: 'Current password', newPassword: 'New password', confirmPassword: 'Repeat new password', passwordRule: 'At least 10 characters (letters, digits or symbols, no spaces).', savePassword: 'Save new password', cancel: 'Cancel', passwordChanged: 'Password changed. Other devices are logged out.', passwordMismatch: 'The new passwords do not match.', wrongCurrentPassword: 'Current password is wrong.',
     username: 'Username', login: 'Log in', logout: 'Log out', changeKey: 'Change API key',
     changeKeyHint: 'Enter your password and the new API key.', noAccount: 'No account? Use your own API key', useThisKey: 'Use this key',
@@ -394,6 +433,35 @@ function initAccount() {
   if (!getAccount()) el.account.open = true;
   renderAccount();
 }
+
+// ---------- API key help ----------
+const HELP_STEPS = [
+  ['help1', 'https://platform.openai.com/'],
+  ['help2', 'https://platform.openai.com/settings/organization/billing/overview'],
+  ['help3', 'https://platform.openai.com/api-keys'],
+  ['help4'], ['help5'],
+];
+const HELP_TIPS = [['tip1'], ['tip2', 'https://platform.openai.com/settings/organization/usage'], ['tip3'], ['tip4']];
+function renderHelp() {
+  const fill = (list, items) => list.replaceChildren(...items.map(([key, url]) => {
+    const item = document.createElement('li');
+    item.append(t(key));
+    if (url) {
+      item.append(' ', Object.assign(document.createElement('a'), {
+        href: url, target: '_blank', rel: 'noopener noreferrer', textContent: t('helpLink'),
+      }));
+    }
+    return item;
+  }));
+  fill($('#help-steps'), HELP_STEPS);
+  fill($('#help-tips'), HELP_TIPS);
+}
+for (const button of document.querySelectorAll('[data-help]')) {
+  button.addEventListener('click', () => { renderHelp(); $('#key-help').showModal(); });
+}
+$('#key-help').addEventListener('click', event => {
+  if (event.target === $('#key-help')) $('#key-help').close(); // tap outside closes
+});
 
 // ---------- Transcript ----------
 const PARAGRAPH_GAP_MS = 1500;   // pause that starts a new paragraph

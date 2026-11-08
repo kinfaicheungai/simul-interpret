@@ -45,10 +45,12 @@
               <input id="api-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-...">
             </label>
             <p class="hint" data-i18n="apiKeyHint"></p>
+            <button type="button" class="help-link" data-help data-i18n="keyHelpButton"></button>
           </div>
           <div class="controls">
             <button id="login" type="submit" class="primary" data-i18n="login"></button>
           </div>
+          <button type="button" class="help-link" data-help data-i18n="firstTimeHelp"></button>
         </form>
         <div id="logged-in" hidden>
           <div class="controls">
@@ -80,6 +82,7 @@
             <input id="own-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-...">
           </label>
           <button id="save-own-key" type="button" data-i18n="useThisKey"></button>
+          <button type="button" class="help-link" data-help data-i18n="keyHelpButton"></button>
         </details>
         <p id="account-msg" class="hint" role="status"></p>
       </div>
@@ -142,5 +145,16 @@
     <p class="note" data-i18n="note"></p>
     <p class="version" id="version"></p>
   </main>
+
+  <dialog id="key-help" aria-labelledby="key-help-title">
+    <div class="dialog-body">
+      <h2 id="key-help-title" data-i18n="helpTitle"></h2>
+      <p data-i18n="helpIntro"></p>
+      <ol id="help-steps"></ol>
+      <h3 data-i18n="helpTipsTitle"></h3>
+      <ul id="help-tips"></ul>
+      <form method="dialog"><button class="primary" data-i18n="helpClose"></button></form>
+    </div>
+  </dialog>
 </body>
 </html>
