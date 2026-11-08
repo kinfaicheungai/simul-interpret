@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: live-interpreter
+    name: simul-interpret
     runtime: node
     plan: free
     buildCommand: npm install
