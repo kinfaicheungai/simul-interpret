@@ -3,6 +3,13 @@
 name = "simul-interpret"
 main = "src/worker.js"
 compatibility_date = "2025-09-01"
+# Keep the public https://simul-interpret.<account>.workers.dev URL on.
+workers_dev = true
+preview_urls = false
+
+# Request logs in the Cloudflare dashboard (Observability tab), for troubleshooting.
+[observability]
+enabled = true
 
 [assets]
 directory = "./public"
