@@ -22,12 +22,12 @@ const STRINGS = {
     near: '近距離（講者拎住電話）', far: '遠距離（電話擺喺枱面）', noiseOff: '關閉降噪',
     start: '開始收音', stop: '停止', stopNow: '即刻結束', playVoice: '播放譯音', mute: '靜音',
     translation: '譯文', original: '原文', download: '下載字幕 (.txt)', clear: '清除字幕',
-    note: '收音期間，聲音會傳送到 OpenAI 處理，按使用時間收費。播放譯音時請戴耳機，減少回音。可以無限時連續使用；連續 10 分鐘冇人講嘢會自動停止。網站唔會儲存錄音或字幕。',
+    note: '收音期間，聲音會傳送到 OpenAI 處理，按使用時間收費。播放譯音時請戴耳機，減少回音。可以無限時連續使用；連續 3 分鐘冇人講嘢會自動停止。網站唔會儲存錄音或字幕。',
     idle: '等候開始', needAccount: '請先喺「帳戶」設定你嘅 API key 或密碼。',
     noSupport: '呢個瀏覽器唔支援收音或 WebRTC。請用 Safari / Chrome 開啟 HTTPS 網址。',
     micWait: '等候咪高峰權限…', connecting: '正在連接翻譯服務…', live: '收音及翻譯中',
     reconnecting: '連線中斷，自動重新連接中（第 {n} 次）…', unstable: '網絡不穩，嘗試恢復…',
-    finishing: '正在完成最後一段翻譯…', stopped: '已停止收音。', idleStop: '連續 10 分鐘冇聲，已自動停止。',
+    finishing: '正在完成最後一段翻譯…', stopped: '已停止收音。', idleStop: '連續 3 分鐘冇聲，已自動停止。',
     hidden: '畫面已離開前景，已停止收音。', micDenied: '未能使用咪高峰。請喺瀏覽器網站設定允許咪高峰，再試一次。',
     micEnded: '咪高峰已中斷，請再按開始。', gaveUp: '多次重新連接失敗，已停止。請檢查網絡後再開始。',
     playFailed: '瀏覽器未能播放語音，請再按播放。字幕會繼續更新。', switchedTo: '［改為譯成 {lang}］',
@@ -51,12 +51,12 @@ const STRINGS = {
     near: '近距离（讲者拿着手机）', far: '远距离（手机放在桌上）', noiseOff: '关闭降噪',
     start: '开始收音', stop: '停止', stopNow: '立即结束', playVoice: '播放译音', mute: '静音',
     translation: '译文', original: '原文', download: '下载字幕 (.txt)', clear: '清除字幕',
-    note: '收音期间，声音会发送到 OpenAI 处理，按使用时间计费。播放译音时请戴耳机，减少回声。可无限时连续使用；连续 10 分钟没人说话会自动停止。网站不会保存录音或字幕。',
+    note: '收音期间，声音会发送到 OpenAI 处理，按使用时间计费。播放译音时请戴耳机，减少回声。可无限时连续使用；连续 3 分钟没人说话会自动停止。网站不会保存录音或字幕。',
     idle: '等待开始', needAccount: '请先在「账户」设置你的 API key 或密码。',
     noSupport: '此浏览器不支持收音或 WebRTC。请用 Safari / Chrome 打开 HTTPS 网址。',
     micWait: '等待麦克风权限…', connecting: '正在连接翻译服务…', live: '收音及翻译中',
     reconnecting: '连接中断，正在自动重连（第 {n} 次）…', unstable: '网络不稳定，尝试恢复…',
-    finishing: '正在完成最后一段翻译…', stopped: '已停止收音。', idleStop: '连续 10 分钟没有声音，已自动停止。',
+    finishing: '正在完成最后一段翻译…', stopped: '已停止收音。', idleStop: '连续 3 分钟没有声音，已自动停止。',
     hidden: '画面已离开前台，已停止收音。', micDenied: '无法使用麦克风。请在浏览器网站设置中允许麦克风，再试一次。',
     micEnded: '麦克风已中断，请再按开始。', gaveUp: '多次重连失败，已停止。请检查网络后再开始。',
     playFailed: '浏览器未能播放语音，请再按播放。字幕会继续更新。', switchedTo: '［改为译成 {lang}］',
@@ -80,12 +80,12 @@ const STRINGS = {
     near: 'Near (speaker holds the phone)', far: 'Far (phone on the table)', noiseOff: 'Noise reduction off',
     start: 'Start', stop: 'Stop', stopNow: 'End now', playVoice: 'Play voice', mute: 'Mute',
     translation: 'Translation', original: 'Original', download: 'Download (.txt)', clear: 'Clear',
-    note: 'While listening, audio is sent to OpenAI and billed by time. Use headphones when playing the voice to avoid echo. Runs as long as you need; it stops by itself after 10 minutes of silence. Nothing is stored on this site.',
+    note: 'While listening, audio is sent to OpenAI and billed by time. Use headphones when playing the voice to avoid echo. Runs as long as you need; it stops by itself after 3 minutes of silence. Nothing is stored on this site.',
     idle: 'Ready', needAccount: 'Set your API key or password under “Account” first.',
     noSupport: 'This browser does not support microphone or WebRTC. Open the HTTPS address in Safari or Chrome.',
     micWait: 'Waiting for microphone permission…', connecting: 'Connecting…', live: 'Listening and translating',
     reconnecting: 'Connection lost, reconnecting (attempt {n})…', unstable: 'Network unstable, recovering…',
-    finishing: 'Finishing the last segment…', stopped: 'Stopped.', idleStop: 'Stopped after 10 minutes of silence.',
+    finishing: 'Finishing the last segment…', stopped: 'Stopped.', idleStop: 'Stopped after 3 minutes of silence.',
     hidden: 'Stopped because the page left the foreground.', micDenied: 'Microphone blocked. Allow it in the browser’s site settings and try again.',
     micEnded: 'Microphone disconnected. Press Start again.', gaveUp: 'Reconnecting failed several times. Check the network and start again.',
     playFailed: 'The browser could not play audio. Press play again; subtitles keep updating.', switchedTo: '[Now translating to {lang}]',
@@ -201,7 +201,7 @@ $('#forget-account').addEventListener('click', () => {
 // ---------- Transcript ----------
 const PARAGRAPH_GAP_MS = 1500;   // pause that starts a new paragraph
 const FLUSH_TIMEOUT_MS = 4000;   // how long to wait for the last segment after closing a connection
-const IDLE_STOP_MS = 10 * 60_000; // auto-stop after this much silence
+const IDLE_STOP_MS = 3 * 60_000;  // auto-stop after this much silence
 const RETRY_DELAYS = [1000, 3000, 6000, 10000];
 
 const boxes = {
@@ -566,6 +566,7 @@ async function init() {
   if (!el.noise.value) el.noise.value = 'near_field';
   const size = parseFloat(store.get('fontSize', '1.3'));
   if (size) setFontSize(size);
+  if (serverConfig.version) $('#version').textContent = 'v' + serverConfig.version;
   initAccount();
   applyUiLang();
 }

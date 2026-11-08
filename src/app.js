@@ -6,6 +6,8 @@
 //  - Own key: a visitor sends their own OpenAI API key in X-OpenAI-Key. It is forwarded to OpenAI
 //    for this one request and never stored or logged.
 
+import { VERSION } from './version.js';
+
 const OPENAI_API = 'https://api.openai.com/v1/realtime/translations';
 
 // Target languages offered in the UI (session.audio.output.language).
@@ -105,7 +107,7 @@ export function createHandler(config, { serveAsset, fetchImpl = fetch }) {
     if (isGet && path === '/healthz') return respond(request, 200, 'ok');
     if (isGet && path === '/config') {
       return json(request, 200, {
-        maxMinutes: config.maxMinutes, languages: LANGUAGES,
+        version: VERSION, maxMinutes: config.maxMinutes, languages: LANGUAGES,
         ownerEnabled: config.ownerEnabled, ownKeyEnabled: config.ownKeyEnabled,
       });
     }

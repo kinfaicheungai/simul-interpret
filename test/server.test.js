@@ -3,6 +3,8 @@ import { after, before, test } from 'node:test';
 import { createApp } from '../server.js';
 import { loadConfig } from '../src/app.js';
 import worker from '../src/worker.js';
+import { VERSION } from '../src/version.js';
+import { readFileSync } from 'node:fs';
 
 const env = { OPENAI_API_KEY: 'sk-owner', APP_PASSWORD: 'a'.repeat(24) };
 const auth = 'Basic ' + Buffer.from('interpreter:' + 'a'.repeat(24)).toString('base64');
@@ -114,4 +116,11 @@ test('Cloudflare worker serves assets and guards sessions', async () => {
   assert.equal((await call('/missing')).status, 404);
   const blocked = await call('/session', { method: 'POST', headers: { 'X-Interpreter-Request': 'start' } });
   assert.equal(blocked.status, 401);
+});
+
+test('version is consistent', async () => {
+  const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)));
+  assert.equal(pkg.version, VERSION);
+  assert.match(readFileSync(new URL('../CHANGELOG.md', import.meta.url), 'utf8'), new RegExp('## v' + VERSION.replaceAll('.', '\\.')));
+  assert.equal((await (await fetch(base + '/config')).json()).version, VERSION);
 });

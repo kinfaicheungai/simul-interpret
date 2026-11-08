@@ -52,3 +52,4 @@ section { background: var(--card); border-radius: .8rem; padding: 1rem; margin: 
 input[type=password] { font: inherit; min-height: 44px; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: .6rem; background: var(--bg); color: var(--fg); }
 .hint { font-size: .8rem; color: var(--muted); margin: 0; }
 [hidden] { display: none !important; }
+.version { font-size: .75rem; color: var(--muted); text-align: center; margin-top: 1.5rem; }
