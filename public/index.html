@@ -54,7 +54,25 @@
           <div class="controls">
             <button id="logout" type="button" data-i18n="logout"></button>
             <button id="show-change-key" type="button" data-i18n="changeKey" hidden></button>
+            <button id="show-change-password" type="button" data-i18n="changePassword" hidden></button>
           </div>
+          <form id="password-form" class="account-body" hidden>
+            <input type="text" id="pw-username" autocomplete="username" hidden>
+            <label><span data-i18n="currentPassword"></span>
+              <input id="current-password" type="password" autocomplete="current-password">
+            </label>
+            <label><span data-i18n="newPassword"></span>
+              <input id="new-password-1" type="password" autocomplete="new-password">
+            </label>
+            <label><span data-i18n="confirmPassword"></span>
+              <input id="new-password-2" type="password" autocomplete="new-password">
+            </label>
+            <p class="hint" data-i18n="passwordRule"></p>
+            <div class="controls">
+              <button type="submit" class="primary" data-i18n="savePassword"></button>
+              <button id="cancel-password" type="button" data-i18n="cancel"></button>
+            </div>
+          </form>
         </div>
         <details id="own-key-box" hidden>
           <summary data-i18n="noAccount"></summary>

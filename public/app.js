@@ -11,6 +11,7 @@ const el = {
 // ---------- Interface language ----------
 const STRINGS = {
   'zh-Hant': {
+    changePassword: '改密碼', currentPassword: '目前密碼', newPassword: '新密碼', confirmPassword: '再輸入一次新密碼', passwordRule: '新密碼最少 10 個字元（英文、數字或符號，唔可以有空格）。', savePassword: '儲存新密碼', cancel: '取消', passwordChanged: '密碼已更改，其他裝置會自動登出。', passwordMismatch: '兩次輸入嘅新密碼唔一樣。', wrongCurrentPassword: '目前密碼唔啱。',
     username: '用戶名', login: '登入', logout: '登出', changeKey: '更換 API key',
     changeKeyHint: '請輸入密碼同新嘅 API key。', noAccount: '冇帳戶？直接用自己嘅 API key', useThisKey: '用呢個 key',
     loggedInAdmin: '管理員 {name}', loggedInUser: '已登入：{name}', wrongLogin: '用戶名或密碼唔啱。',
@@ -19,7 +20,7 @@ const STRINGS = {
     manageUsers: '管理用戶', newUserPlaceholder: '新用戶名（英文細階／數字）', addUser: '新增用戶',
     noUsers: '未有用戶。', userHasKey: '已設定 API key', userNoKey: '未登入過（未有 API key）', lastLogin: '最近登入 {date}',
     resetPassword: '重設密碼', deleteUser: '刪除', confirmDelete: '再撳一次確認刪除',
-    shareCredentials: '將以下資料交俾對方：', passwordOnce: '密碼只會顯示呢一次。重設密碼後，對方要重新輸入 API key。',
+    shareCredentials: '將以下資料交俾對方：', passwordOnce: '密碼只會顯示呢一次。對方登入後可以喺「帳戶」自己改密碼。重設密碼後，對方要重新輸入 API key。',
     copy: '複製', copied: '已複製',
     adminErr_bad_username: '用戶名要 2–32 個英文細階字母、數字或 . _ -，而且唔可以同管理員一樣。',
     adminErr_user_exists: '呢個用戶名已經有人用。', adminErr_no_user: '搵唔到呢個用戶。',
@@ -53,6 +54,7 @@ const STRINGS = {
     exportTitle: '即時傳譯字幕',
   },
   'zh-Hans': {
+    changePassword: '修改密码', currentPassword: '当前密码', newPassword: '新密码', confirmPassword: '再次输入新密码', passwordRule: '新密码至少 10 个字符（英文、数字或符号，不能有空格）。', savePassword: '保存新密码', cancel: '取消', passwordChanged: '密码已修改，其他设备会自动退出登录。', passwordMismatch: '两次输入的新密码不一致。', wrongCurrentPassword: '当前密码不正确。',
     username: '用户名', login: '登录', logout: '退出登录', changeKey: '更换 API key',
     changeKeyHint: '请输入密码和新的 API key。', noAccount: '没有账户？直接用自己的 API key', useThisKey: '使用这个 key',
     loggedInAdmin: '管理员 {name}', loggedInUser: '已登录：{name}', wrongLogin: '用户名或密码不正确。',
@@ -61,7 +63,7 @@ const STRINGS = {
     manageUsers: '管理用户', newUserPlaceholder: '新用户名（小写英文／数字）', addUser: '新增用户',
     noUsers: '暂无用户。', userHasKey: '已设置 API key', userNoKey: '未登录过（未有 API key）', lastLogin: '最近登录 {date}',
     resetPassword: '重设密码', deleteUser: '删除', confirmDelete: '再按一次确认删除',
-    shareCredentials: '把以下信息发给对方：', passwordOnce: '密码只显示这一次。重设密码后，对方需要重新输入 API key。',
+    shareCredentials: '把以下信息发给对方：', passwordOnce: '密码只显示这一次。对方登录后可在「账户」自行修改密码。重设密码后，对方需要重新输入 API key。',
     copy: '复制', copied: '已复制',
     adminErr_bad_username: '用户名需为 2–32 个小写英文字母、数字或 . _ -，且不能与管理员相同。',
     adminErr_user_exists: '这个用户名已被使用。', adminErr_no_user: '找不到这个用户。',
@@ -95,6 +97,7 @@ const STRINGS = {
     exportTitle: '实时传译字幕',
   },
   en: {
+    changePassword: 'Change password', currentPassword: 'Current password', newPassword: 'New password', confirmPassword: 'Repeat new password', passwordRule: 'At least 10 characters (letters, digits or symbols, no spaces).', savePassword: 'Save new password', cancel: 'Cancel', passwordChanged: 'Password changed. Other devices are logged out.', passwordMismatch: 'The new passwords do not match.', wrongCurrentPassword: 'Current password is wrong.',
     username: 'Username', login: 'Log in', logout: 'Log out', changeKey: 'Change API key',
     changeKeyHint: 'Enter your password and the new API key.', noAccount: 'No account? Use your own API key', useThisKey: 'Use this key',
     loggedInAdmin: 'Admin {name}', loggedInUser: 'Logged in: {name}', wrongLogin: 'Wrong username or password.',
@@ -103,7 +106,7 @@ const STRINGS = {
     manageUsers: 'Manage users', newUserPlaceholder: 'New username (lowercase / digits)', addUser: 'Add user',
     noUsers: 'No users yet.', userHasKey: 'API key set', userNoKey: 'Not logged in yet (no API key)', lastLogin: 'last login {date}',
     resetPassword: 'Reset password', deleteUser: 'Delete', confirmDelete: 'Tap again to delete',
-    shareCredentials: 'Send these details to the person:', passwordOnce: 'The password is shown only once. After a reset, the user must enter their API key again.',
+    shareCredentials: 'Send these details to the person:', passwordOnce: 'The password is shown only once. The user can change it under “Account” after logging in. After a reset, they must enter their API key again.',
     copy: 'Copy', copied: 'Copied',
     adminErr_bad_username: 'Usernames are 2–32 lowercase letters, digits or . _ - and cannot match the admin name.',
     adminErr_user_exists: 'That username is taken.', adminErr_no_user: 'User not found.',
@@ -201,6 +204,8 @@ function renderAccount() {
   $('#login-form').hidden = loggedIn && !needKey;
   $('#logged-in').hidden = !loggedIn || needKey;
   $('#show-change-key').hidden = account?.role !== 'user';
+  $('#show-change-password').hidden = account?.role !== 'user';
+  if (account?.role !== 'user') $('#password-form').hidden = true;
   $('#key-field').hidden = !needKey;
   $('#own-key-box').hidden = loggedIn || !serverConfig.ownKeyEnabled;
   $('#admin').hidden = account?.role !== 'owner';
@@ -268,6 +273,39 @@ $('#show-change-key').addEventListener('click', () => {
   renderAccount();
   el.accountMsg.textContent = t('changeKeyHint');
   el.password.focus();
+});
+$('#show-change-password').addEventListener('click', () => {
+  $('#password-form').hidden = false;
+  $('#pw-username').value = store.get('username') ?? '';
+  $('#current-password').focus();
+});
+$('#cancel-password').addEventListener('click', () => { $('#password-form').reset(); $('#password-form').hidden = true; });
+$('#password-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const newPassword = $('#new-password-1').value;
+  if (newPassword !== $('#new-password-2').value) { el.accountMsg.textContent = t('passwordMismatch'); return; }
+  if (!/^[!-~]{10,128}$/.test(newPassword)) { el.accountMsg.textContent = t('passwordRule'); return; }
+  el.accountMsg.textContent = t('checking');
+  let result;
+  try {
+    result = await api('/account/password', { method: 'POST', auth: false, body: {
+      username: store.get('username'), password: $('#current-password').value, newPassword,
+    } });
+  } catch { el.accountMsg.textContent = t('err_unreachable'); return; }
+  if (result.ok) {
+    store.set('token', result.data.token);
+    $('#password-form').reset();
+    $('#password-form').hidden = true;
+    el.accountMsg.textContent = t('passwordChanged');
+  } else if (result.data.error === 'need_key') {
+    // Password changed, but there was no key to keep: log in again and enter one.
+    clearAccount();
+    renderAccount();
+    el.accountMsg.textContent = t('passwordChanged') + ' ' + t('firstLoginKey');
+  } else {
+    el.accountMsg.textContent = result.data.error === 'weak_password' ? t('passwordRule')
+      : result.data.error === 'too_many' ? t('err_too_many') : t('wrongCurrentPassword');
+  }
 });
 $('#save-own-key').addEventListener('click', () => {
   const key = $('#own-key').value.trim();

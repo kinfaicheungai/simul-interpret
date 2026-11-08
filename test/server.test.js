@@ -20,7 +20,7 @@ before(async () => {
     if (upstreamStatus !== 200) return new Response('{"error":{}}', { status: upstreamStatus });
     return new Response(JSON.stringify({ value: 'ek_test', expires_at: 1 }), { status: 200 });
   };
-  server = createApp({ ...env, SESSIONS_PER_MINUTE: '3' }, { fetchImpl: fakeFetch, kv });
+  server = createApp({ ...env, SESSIONS_PER_MINUTE: '3', LOGINS_PER_MINUTE: '100' }, { fetchImpl: fakeFetch, kv });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   base = `http://127.0.0.1:${server.address().port}`;
 });
@@ -123,6 +123,24 @@ test('user lifecycle: create, first login with key, session uses own key, reset,
   await post('/logout', {}, bearer(token2));
   assert.equal((await post('/admin/users/delete', { username: 'amy' }, bearer(adminToken))).status, 200);
   assert.equal((await post('/login', { username: 'amy', password: reset.password })).status, 401);
+});
+
+test('user changes own password and keeps the API key', async () => {
+  const created = await (await post('/admin/users/create', { username: 'ben' }, bearer(adminToken))).json();
+  const first = await (await post('/login', { username: 'ben', password: created.password, apiKey: userKey })).json();
+  assert.equal((await post('/account/password', { username: 'ben', password: 'wrong', newPassword: 'my-new-pass-123' })).status, 401);
+  assert.equal((await post('/account/password', { username: 'ben', password: created.password, newPassword: 'short' })).status, 400);
+  const changed = await post('/account/password', { username: 'ben', password: created.password, newPassword: 'my-new-pass-123' });
+  assert.equal(changed.status, 200);
+  const { token } = await changed.json();
+  // Old password and old sessions stop working; the new token still uses the same key.
+  assert.equal((await post('/login', { username: 'ben', password: created.password })).status, 401);
+  assert.equal((await session(bearer(first.token))).status, 401);
+  upstreamCalls = [];
+  assert.equal((await session(bearer(token))).status, 200);
+  assert.equal(upstreamCalls[0].headers.Authorization, 'Bearer ' + userKey);
+  assert.equal((await post('/login', { username: 'ben', password: 'my-new-pass-123' })).status, 200, 'no key needed after change');
+  await post('/admin/users/delete', { username: 'ben' }, bearer(adminToken));
 });
 
 test('OpenAI errors map to readable codes', async () => {

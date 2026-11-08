@@ -34,7 +34,7 @@ const SECURITY_HEADERS = {
 export function loadConfig(env) {
   const {
     OPENAI_API_KEY, APP_PASSWORD, APP_USERNAME = 'admin',
-    MAX_SESSION_MINUTES = '30', SESSIONS_PER_MINUTE = '6', ALLOW_OWN_KEY = 'false',
+    MAX_SESSION_MINUTES = '30', SESSIONS_PER_MINUTE = '6', ALLOW_OWN_KEY = 'false', LOGINS_PER_MINUTE = '10',
   } = env;
   const ownerEnabled = Boolean(OPENAI_API_KEY?.trim() || APP_PASSWORD);
   if (ownerEnabled) {
@@ -51,7 +51,7 @@ export function loadConfig(env) {
   if (!(perMinute >= 1 && perMinute <= 60)) throw new Error('SESSIONS_PER_MINUTE must be 1–60.');
   return {
     apiKey: OPENAI_API_KEY?.trim(), username: APP_USERNAME, password: APP_PASSWORD,
-    ownerEnabled, ownKeyEnabled, maxMinutes, perMinute,
+    ownerEnabled, ownKeyEnabled, maxMinutes, perMinute, loginsPerMinute: Math.max(1, Number(LOGINS_PER_MINUTE) || 10),
   };
 }
 
@@ -195,7 +195,7 @@ export function createHandler(config, { serveAsset, kv, fetchImpl = fetch }) {
   // ----- routes -----
   async function login(request, send) {
     const ip = request.headers.get('cf-connecting-ip') ?? 'local';
-    if (!allow('login:' + ip, 10)) return send(429, { error: 'too_many' });
+    if (!allow('login:' + ip, config.loginsPerMinute)) return send(429, { error: 'too_many' });
     let body;
     try { body = await readJson(request); } catch { return send(400, { error: 'bad_request' }); }
     const username = String(body.username ?? '').trim().toLowerCase();
@@ -223,6 +223,38 @@ export function createHandler(config, { serveAsset, kv, fetchImpl = fetch }) {
     try { apiKey = await decrypt(user.keyEnc, passwordKey); } catch { return send(409, { error: 'need_key' }); }
     user.lastLogin = new Date().toISOString();
     await kv.put('user:' + username, JSON.stringify(user));
+    return send(200, { token: await createUserSession(user, apiKey), role: 'user', username });
+  }
+
+  // A user changes their own password. The stored API key is re-encrypted with the new
+  // password; other devices are logged out.
+  async function changePassword(request, send) {
+    const ip = request.headers.get('cf-connecting-ip') ?? 'local';
+    if (!allow('login:' + ip, config.loginsPerMinute)) return send(429, { error: 'too_many' });
+    if (!kv) return send(503, { error: 'storage_missing' });
+    let body;
+    try { body = await readJson(request); } catch { return send(400, { error: 'bad_request' }); }
+    const username = String(body.username ?? '').trim().toLowerCase();
+    const password = String(body.password ?? '');
+    const newPassword = String(body.newPassword ?? '');
+    if (!/^[!-~]{10,128}$/.test(newPassword)) return send(400, { error: 'weak_password' });
+    const user = USERNAME_PATTERN.test(username) ? await kv.get('user:' + username, 'json') : null;
+    const hash = await pbkdf2(password, user ? fromB64(user.salt) : new Uint8Array(16));
+    if (!user || !equalBytes(hash, fromB64(user.hash))) return send(401, { error: 'wrong_login' });
+
+    let apiKey = null;
+    if (user.keyEnc) {
+      try { apiKey = await decrypt(user.keyEnc, await pbkdf2(password, fromB64(user.encSalt))); } catch {}
+    }
+    const salt = randomBytes(16);
+    const encSalt = randomBytes(16);
+    user.salt = toB64(salt);
+    user.hash = toB64(await pbkdf2(newPassword, salt));
+    user.encSalt = toB64(encSalt);
+    user.keyEnc = apiKey ? await encrypt(apiKey, await pbkdf2(newPassword, encSalt)) : null;
+    user.version += 1;
+    await kv.put('user:' + username, JSON.stringify(user));
+    if (!apiKey) return send(409, { error: 'need_key' });
     return send(200, { token: await createUserSession(user, apiKey), role: 'user', username });
   }
 
@@ -353,6 +385,7 @@ export function createHandler(config, { serveAsset, kv, fetchImpl = fetch }) {
       const who = await identify(request);
       return who ? send(200, { role: who.role, username: who.username }) : send(401, { error: 'login_required' });
     }
+    if (request.method === 'POST' && path === '/account/password') return changePassword(request, send);
     if (path.startsWith('/admin/')) return admin(request, path, send);
     if (request.method === 'POST' && path === '/session') return openSession(request, send);
     if (isGet) {
