@@ -1,0 +1,12 @@
+{
+  "name": "live-interpreter",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Real-time speech interpreter web app (OpenAI Realtime Translation, WebRTC)",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: live-interpreter
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: NODE_VERSION
+        value: "22"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: APP_PASSWORD
+        sync: false
+      - key: MAX_SESSION_MINUTES
+        value: "10"
