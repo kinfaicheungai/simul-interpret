@@ -8,13 +8,21 @@
 
 ## 功能
 
-- 揀目標語言（中文、English、日本語、한국어……），**收音途中都可以即時轉語言**
+- **無限時連續使用**：每段連線用到 30 分鐘前會喺背景自動無縫換新連線；網絡斷咗會自動重連（最多 4 次）；連續 10 分鐘冇人講嘢自動停止，避免忘記熄機一直收費
+- **兩種帳戶**（喺 App 嘅「帳戶」設定）：
+  - **用自己嘅 OpenAI API key**：任何人都可以用，key 只存喺佢自己部裝置，每次連線經伺服器轉交 OpenAI，唔會記錄，費用由佢自己嘅 OpenAI 帳戶支付
+  - **管理員密碼**：用伺服器上面 `OPENAI_API_KEY` 嘅額度（即係你自己）
+- **介面語言**：繁體中文、简体中文、English（自動跟裝置語言，可以手動轉）
+- 揀目標語言，**收音途中都可以即時轉語言**
 - 咪高峰距離模式：近距離（拎住電話）／遠距離（電話擺枱面，用 `far_field` 降噪）
 - 撳「停止」會先等最後一段翻譯完成先斷線，唔會漏尾句
-- 停頓超過 1.5 秒自動分段，字幕易讀
-- 收音期間保持螢幕常亮（Screen Wake Lock），避免 iPhone 自動鎖機中斷
-- 計時顯示、字體大細、下載字幕 `.txt`、清除字幕
-- 深色模式、PWA（Safari →「分享」→「加至主畫面」）
+- 停頓超過 1.5 秒自動分段；收音期間保持螢幕常亮
+- 計時、字體大細、下載字幕 `.txt`、清除字幕、深色模式、PWA（Safari →「分享」→「加至主畫面」）
+
+## 已知限制
+
+- 翻譯質素由 OpenAI `gpt-realtime-translate` 決定，API 暫時唔支援術語表或背景指示（例如「0 and 3 = 零勝三負」呢類慣用語可能譯錯）
+- iPhone 切去其他 App 或鎖機時，iOS 會停咪高峰，所以 App 會自動停止
 
 ## 本機啟動
 
@@ -25,19 +33,19 @@ cp .env.example .env    # 用文字編輯器填好 OPENAI_API_KEY 同 APP_PASSWO
 npm start
 ```
 
-打開 http://localhost:3000，用戶名 `interpreter`（可用 `APP_USERNAME` 改），密碼係 `APP_PASSWORD`。
+打開 http://localhost:3000，喺「帳戶」揀「管理員密碼」並輸入 `APP_PASSWORD`，或者揀用自己嘅 API key。
 iPhone 收音一定要用 HTTPS，所以手機測試請用下面部署後嘅網址。
 
 本機用 `.env` 設定；Cloudflare 上面嘅設定見下面部署部分（`MAX_SESSION_MINUTES` 等喺 `wrangler.toml` 改）。
 
-| 環境變數 | 必填 | 說明 |
-|---|---|---|
-| `OPENAI_API_KEY` | ✅ | 有 Realtime Translation 權限同額度嘅 key |
-| `APP_PASSWORD` | ✅ | 網站登入密碼，20+ 個可見 ASCII 字元（建議用密碼管理器產生 32 位） |
-| `APP_USERNAME` | | 預設 `interpreter` |
-| `MAX_SESSION_MINUTES` | | 每次收音上限，預設 10（1–120） |
-| `SESSIONS_PER_MINUTE` | | 每分鐘最多開幾次連線，預設 6 |
-| `HOST` / `PORT` | | 本機用，預設 `127.0.0.1` / `3000` |
+| 環境變數 | 說明 |
+|---|---|
+| `OPENAI_API_KEY` | 管理員模式用嘅 key（同 `APP_PASSWORD` 一齊設定；兩個都唔設就只有「自己嘅 key」模式） |
+| `APP_PASSWORD` | 管理員密碼，20+ 個可見 ASCII 字元 |
+| `ALLOW_OWN_KEY` | 允許訪客用自己嘅 key，預設 `true` |
+| `MAX_SESSION_MINUTES` | 每段連線幾耐換新，預設 30（1–120）；整體冇時間上限 |
+| `SESSIONS_PER_MINUTE` | 每個用戶每分鐘最多開幾次連線，預設 6 |
+| `HOST` / `PORT` | 本機用，預設 `127.0.0.1` / `3000` |
 
 ## 測試
 
@@ -56,7 +64,9 @@ Repo 已附 `wrangler.toml`，網頁同後端一齊放喺同一個 Worker。
 3. 部署完成後去呢個 Worker →「Settings」→「Variables and Secrets」→「Add」，類型揀 **Secret**，加入：
    - `OPENAI_API_KEY`
    - `APP_PASSWORD`（20+ 個字元）
-4. 用 iPhone Safari 開 `https://simul-interpret.<你的帳戶>.workers.dev`，用 `interpreter` 同密碼登入
+4. 用 iPhone Safari 開 `https://simul-interpret.<你的帳戶>.workers.dev`，喺「帳戶」輸入管理員密碼
+
+想推介俾其他人：直接畀佢哋網址，佢哋喺「帳戶」揀「用我自己嘅 OpenAI API key」就用得，唔會用到你嘅額度。
 
 之後每次 push 去 `main`，Cloudflare 會自動重新部署。
 
@@ -64,7 +74,7 @@ Repo 已附 `wrangler.toml`，網頁同後端一齊放喺同一個 Worker。
 
 ## iPhone 驗收清單
 
-1. 開 HTTPS 網址並登入，撳「開始收音」並允許咪高峰。
+1. 開 HTTPS 網址，喺「帳戶」設定密碼或 key，撳「開始收音」並允許咪高峰。
 2. 連續講 20–30 秒（例如讀一段天氣預報），睇譯文會唔會喺講完之前開始更新，核對數字同日期。
 3. 戴耳機，撳「播放譯音」再撳「靜音」，確認字幕繼續出現。
 4. 收音途中轉「譯成」語言，確認之後嘅譯文用新語言。
@@ -74,7 +84,7 @@ Repo 已附 `wrangler.toml`，網頁同後端一齊放喺同一個 Worker。
 ## 運作原理
 
 ```
-iPhone ──(Basic Auth) POST /session──▶ Worker    ──(API key)──▶ OpenAI /realtime/translations/client_secrets
+iPhone ──(密碼或自己 key) POST /session──▶ Worker ──(對應 key)──▶ OpenAI /realtime/translations/client_secrets
    │                                       ◀────── 60 秒短期憑證 ek_… ──────┘
    └──WebRTC SDP (ek_…)──▶ OpenAI /realtime/translations/calls
         咪高峰音軌 ──▶          ◀── 譯音音軌 + 資料通道（原文／譯文字幕 delta）
@@ -82,7 +92,7 @@ iPhone ──(Basic Auth) POST /session──▶ Worker    ──(API key)──
 
 - 原文轉錄用 `gpt-realtime-whisper`
 - API key 只喺伺服器；瀏覽器只會拎到 60 秒內有效嘅短期憑證
-- 網站有 HTTP Basic Auth、CSP、速率限制；公開部署必須用 HTTPS
+- 網頁本身公開；攞翻譯連線一定要管理員密碼或者自己嘅 key。另有 CSP 同每個用戶嘅速率限制
 
 ## 私隱
 

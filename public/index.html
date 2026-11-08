@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="zh-Hant-HK">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#075b51">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="即時傳譯">
-  <title>即時傳譯</title>
+  <meta name="apple-mobile-web-app-title" content="Live Interpreter">
+  <title>Live Interpreter</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/icon-180.png">
@@ -16,53 +16,89 @@
 <body>
   <main>
     <header>
-      <p class="eyebrow">LIVE INTERPRETER · 測試版</p>
-      <h1>即時傳譯</h1>
-      <p class="lead">按開始後講嘢，網頁會持續收音，逐段顯示原文同譯文。請保持畫面喺前景。</p>
+      <div class="topbar">
+        <p class="eyebrow">LIVE INTERPRETER</p>
+        <label class="ui-lang"><span class="sr-only" data-i18n="uiLanguage"></span>
+          <select id="ui-lang" aria-label="Interface language">
+            <option value="zh-Hant">繁體中文</option>
+            <option value="zh-Hans">简体中文</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+      </div>
+      <h1 data-i18n="title"></h1>
+      <p class="lead" data-i18n="lead"></p>
     </header>
 
+    <details id="account" class="account">
+      <summary><span data-i18n="account"></span> · <span id="account-state"></span></summary>
+      <div class="account-body">
+        <fieldset>
+          <legend class="sr-only" data-i18n="account"></legend>
+          <label class="choice" id="choice-own"><input type="radio" name="mode" value="own"> <span data-i18n="modeOwn"></span></label>
+          <label class="choice" id="choice-owner"><input type="radio" name="mode" value="owner"> <span data-i18n="modeOwner"></span></label>
+        </fieldset>
+        <div id="own-fields">
+          <label><span data-i18n="apiKey"></span>
+            <input id="api-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-...">
+          </label>
+          <p class="hint" data-i18n="apiKeyHint"></p>
+        </div>
+        <div id="owner-fields">
+          <label><span data-i18n="password"></span>
+            <input id="password" type="password" autocomplete="current-password">
+          </label>
+        </div>
+        <div class="controls">
+          <button id="save-account" class="primary" data-i18n="save"></button>
+          <button id="forget-account" data-i18n="forget"></button>
+        </div>
+        <p id="account-msg" class="hint" role="status"></p>
+      </div>
+    </details>
+
     <div class="settings">
-      <label>譯成
+      <label><span data-i18n="translateTo"></span>
         <select id="language"></select>
       </label>
-      <label>咪高峰距離
+      <label><span data-i18n="micDistance"></span>
         <select id="noise">
-          <option value="near_field">近距離（講者拎住電話）</option>
-          <option value="far_field">遠距離（電話擺喺枱面）</option>
-          <option value="off">關閉降噪</option>
+          <option value="near_field" data-i18n="near"></option>
+          <option value="far_field" data-i18n="far"></option>
+          <option value="off" data-i18n="noiseOff"></option>
         </select>
       </label>
     </div>
 
     <div class="controls">
-      <button id="start" class="primary">開始收音</button>
-      <button id="stop" disabled>停止</button>
-      <button id="sound" aria-pressed="false" disabled>播放譯音</button>
+      <button id="start" class="primary" data-i18n="start"></button>
+      <button id="stop" disabled data-i18n="stop"></button>
+      <button id="sound" aria-pressed="false" disabled data-i18n="playVoice"></button>
     </div>
-    <p class="statusline"><span id="status" role="status">等候開始</span> <span id="clock" aria-label="已用時間"></span></p>
+    <p class="statusline"><span id="status" role="status"></span> <span id="clock"></span></p>
     <audio id="audio" autoplay playsinline muted></audio>
 
     <section>
       <div class="section-head">
-        <h2 id="target-title">譯文</h2>
+        <h2 id="target-title" data-i18n="translation"></h2>
         <div class="tools">
-          <button id="smaller" aria-label="縮細字">A−</button>
-          <button id="bigger" aria-label="放大字">A+</button>
+          <button id="smaller" aria-label="A−">A−</button>
+          <button id="bigger" aria-label="A+">A+</button>
         </div>
       </div>
-      <div class="transcript" id="target" tabindex="0" aria-labelledby="target-title" aria-live="off"></div>
+      <div class="transcript" id="target" tabindex="0" aria-labelledby="target-title"></div>
     </section>
     <section>
-      <h2 id="source-title">原文</h2>
+      <h2 id="source-title" data-i18n="original"></h2>
       <div class="transcript" id="source" tabindex="0" aria-labelledby="source-title"></div>
     </section>
 
     <div class="controls">
-      <button id="download" disabled>下載字幕 (.txt)</button>
-      <button id="clear" disabled>清除字幕</button>
+      <button id="download" disabled data-i18n="download"></button>
+      <button id="clear" disabled data-i18n="clear"></button>
     </div>
 
-    <p class="note">收音期間，聲音會傳送到 OpenAI 處理。播放譯音時請戴耳機，減少回音。每次最長 <span id="max-min">10</span> 分鐘；網站唔會儲存錄音或字幕。</p>
+    <p class="note" data-i18n="note"></p>
   </main>
 </body>
 </html>

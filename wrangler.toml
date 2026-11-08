@@ -18,5 +18,6 @@ binding = "ASSETS"
 run_worker_first = true
 
 [vars]
-MAX_SESSION_MINUTES = "10"
+MAX_SESSION_MINUTES = "30"
+ALLOW_OWN_KEY = "true"
 SESSIONS_PER_MINUTE = "6"
