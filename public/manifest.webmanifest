@@ -3,8 +3,8 @@
   "short_name": "即時傳譯",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#edf4f2",
-  "theme_color": "#075b51",
+  "background_color": "#fdf6ec",
+  "theme_color": "#ffb84d",
   "icons": [
     { "src": "/icon-180.png", "sizes": "180x180", "type": "image/png" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },

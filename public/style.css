@@ -1,13 +1,14 @@
 :root {
   color-scheme: light dark;
   font-family: system-ui, -apple-system, "PingFang HK", "Noto Sans HK", sans-serif;
-  --bg: #edf4f2; --fg: #122d2b; --card: #ffffff; --line: #315853;
-  --accent: #075b51; --accent-fg: #ffffff; --muted: #4a6662;
+  /* Warm orange theme. Text colours meet WCAG AA (most AAA); see README "顏色". */
+  --bg: #fdf6ec; --fg: #2b2118; --card: #ffffff; --line: #a0825f;
+  --accent: #ffb84d; --accent-fg: #2b1a05; --accent-edge: #d98a1f; --link: #a3500b; --muted: #6b5a49;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0d1716; --fg: #e3efed; --card: #15211f; --line: #4f7a74;
-    --accent: #2f9e8f; --accent-fg: #04110f; --muted: #9db8b3;
+    --bg: #16120e; --fg: #f4ece2; --card: #221c16; --line: #7d6750;
+    --accent: #ffb84d; --accent-fg: #2b1a05; --accent-edge: #ffb84d; --link: #ffc46b; --muted: #c9b8a5;
   }
 }
 body { margin: 0; background: var(--bg); color: var(--fg); }
@@ -28,7 +29,7 @@ select, button {
 }
 select { width: 100%; }
 .controls { display: flex; flex-wrap: wrap; gap: .5rem; margin: .6rem 0; }
-.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
+.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent-edge); font-weight: 700; }
 button:disabled, select:disabled { opacity: .48; }
 .statusline { display: flex; justify-content: space-between; gap: 1rem; font-size: .9rem; margin: .4rem 0; }
 #clock { font-variant-numeric: tabular-nums; color: var(--muted); }
@@ -66,12 +67,15 @@ input:not([type=radio]) { font: inherit; min-height: 44px; padding: .5rem .8rem;
 .user-list li { display: flex; justify-content: space-between; align-items: center; gap: .5rem; flex-wrap: wrap; border-top: 1px solid color-mix(in srgb, var(--line) 30%, transparent); padding-top: .5rem; }
 .user-list .controls { margin: 0; }
 .user-list button { min-height: 36px; padding: .3rem .6rem; font-size: .85rem; }
-.help-link { border: 0; background: none; color: var(--accent); padding: .2rem 0; min-height: 32px; text-align: left; font-size: .9rem; text-decoration: underline; text-underline-offset: 3px; }
+.help-link { border: 0; background: none; color: var(--link); padding: .2rem 0; min-height: 32px; text-align: left; font-size: .9rem; text-decoration: underline; text-underline-offset: 3px; }
 dialog { overflow-y: auto; overscroll-behavior: contain; border: 0; border-radius: 1rem; padding: 0; max-width: min(36rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); background: var(--card); color: var(--fg); box-shadow: 0 10px 40px rgb(0 0 0 / .3); }
 dialog::backdrop { background: rgb(0 0 0 / .45); }
 .dialog-body { padding: 1.2rem 1.2rem 1rem; overflow-y: auto; }
 .dialog-body h2 { font-size: 1.25rem; margin-bottom: .6rem; }
 .dialog-body h3 { font-size: 1rem; margin: 1rem 0 .3rem; }
 .dialog-body ol, .dialog-body ul { padding-left: 1.3rem; margin: .4rem 0; display: grid; gap: .55rem; line-height: 1.55; }
-.dialog-body a { color: var(--accent); font-weight: 600; white-space: nowrap; }
+.dialog-body a { color: var(--link); font-weight: 600; white-space: nowrap; }
 .dialog-body form { display: flex; justify-content: flex-end; margin-top: 1rem; }
+h1 { display: flex; align-items: center; gap: .6rem; }
+.mascot { width: 3rem; height: 3rem; border-radius: .8rem; flex: none; }
+:focus-visible { outline: 3px solid var(--accent-edge); outline-offset: 2px; }

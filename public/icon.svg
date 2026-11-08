@@ -1,11 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#075b51"/>
-  <rect x="96" y="132" width="200" height="140" rx="36" fill="#ffffff"/>
-  <path d="M140 272 l-12 52 l58 -52 z" fill="#ffffff"/>
-  <rect x="216" y="232" width="200" height="140" rx="36" fill="#9fe0d4"/>
-  <path d="M372 372 l12 52 l-58 -52 z" fill="#9fe0d4"/>
-  <rect x="134" y="182" width="124" height="18" rx="9" fill="#075b51"/>
-  <rect x="134" y="214" width="84" height="18" rx="9" fill="#075b51"/>
-  <rect x="254" y="282" width="124" height="18" rx="9" fill="#075b51"/>
-  <rect x="254" y="314" width="84" height="18" rx="9" fill="#075b51"/>
+  <rect width="512" height="512" rx="112" fill="#ffb84d"/>
+  <path d="M112 512 C122 452 186 432 256 432 C326 432 390 452 400 512 Z" fill="#ffffff"/>
+  <circle cx="256" cy="298" r="150" fill="#f7d6bb"/>
+  <path d="M106 300 C96 170 176 116 256 116 C336 116 416 170 406 300 C398 262 386 236 368 220 C348 232 312 226 298 210 C280 228 236 230 220 214 C202 230 166 232 146 222 C128 244 114 270 106 300 Z" fill="#221d1b"/>
+  <path d="M96 300 C92 72 420 72 416 300" fill="none" stroke="#2c2c2e" stroke-width="22" stroke-linecap="round"/>
+  <rect x="72" y="252" width="56" height="96" rx="24" fill="#2c2c2e"/>
+  <rect x="384" y="252" width="56" height="96" rx="24" fill="#2c2c2e"/>
+  <rect x="86" y="272" width="10" height="56" rx="5" fill="#ffe7b8"/>
+  <rect x="416" y="272" width="10" height="56" rx="5" fill="#ffe7b8"/>
+  <path d="M104 344 C108 396 158 408 204 394" fill="none" stroke="#2c2c2e" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="212" cy="391" r="15" fill="#2c2c2e"/>
+  <path d="M168 244 q26 -12 52 -2" fill="none" stroke="#221d1b" stroke-width="10" stroke-linecap="round"/>
+  <path d="M292 242 q26 -10 52 2" fill="none" stroke="#221d1b" stroke-width="10" stroke-linecap="round"/>
+  <ellipse cx="166" cy="350" rx="26" ry="15" fill="#ff8f8f" opacity=".45"/>
+  <ellipse cx="346" cy="350" rx="26" ry="15" fill="#ff8f8f" opacity=".45"/>
+  <rect x="150" y="260" width="92" height="66" rx="20" fill="#ffffff" fill-opacity=".35" stroke="#151515" stroke-width="12"/>
+  <rect x="270" y="260" width="92" height="66" rx="20" fill="#ffffff" fill-opacity=".35" stroke="#151515" stroke-width="12"/>
+  <path d="M242 284 q14 -10 28 0" fill="none" stroke="#151515" stroke-width="10" stroke-linecap="round"/>
+  <ellipse cx="196" cy="296" rx="12" ry="15" fill="#151515"/>
+  <ellipse cx="316" cy="296" rx="12" ry="15" fill="#151515"/>
+  <circle cx="200" cy="290" r="4.5" fill="#fff"/>
+  <circle cx="320" cy="290" r="4.5" fill="#fff"/>
+  <path d="M234 362 Q256 384 278 362" fill="none" stroke="#7a3b2e" stroke-width="9" stroke-linecap="round"/>
+  <g>
+    <path d="M40 60 h96 a22 22 0 0 1 22 22 v44 a22 22 0 0 1 -22 22 h-44 l-22 22 v-22 h-30 a22 22 0 0 1 -22 -22 v-44 a22 22 0 0 1 22 -22 z" fill="#ffffff"/>
+    <text x="88" y="123" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="800" font-size="56" fill="#ffb84d">A</text>
+    <path d="M376 60 h96 a22 22 0 0 1 22 22 v44 a22 22 0 0 1 -22 22 h-30 v22 l-22 -22 h-44 a22 22 0 0 1 -22 -22 v-44 a22 22 0 0 1 22 -22 z" fill="#ffe7b8"/>
+    <text x="424" y="125" text-anchor="middle" font-family="PingFang HK, Noto Sans CJK TC, Noto Sans TC, sans-serif" font-weight="800" font-size="54" fill="#ffb84d">文</text>
+  </g>
 </svg>
