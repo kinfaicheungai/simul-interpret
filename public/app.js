@@ -11,6 +11,7 @@ const el = {
 // ---------- Interface language ----------
 const STRINGS = {
   'zh-Hant': {
+    jumpLatest: '⬇ 最新',
     keyHelpButton: '❓ 點樣攞 OpenAI API key？', firstTimeHelp: '❓ 第一次用？睇點樣準備 OpenAI API key', helpClose: '明白',
     helpTitle: '點樣申請 OpenAI API key？',
     helpIntro: 'API key 就好似一條專屬鎖匙：App 用佢幫你連接 OpenAI 做翻譯，費用直接計落你自己嘅 OpenAI 帳戶，唔會用到其他人嘅錢。注意：ChatGPT Plus 訂閱同 API 係分開收費，就算有 Plus 都要另外增值。大約 5 分鐘就搞掂。',
@@ -67,6 +68,7 @@ const STRINGS = {
     exportTitle: '即時傳譯字幕',
   },
   'zh-Hans': {
+    jumpLatest: '⬇ 最新',
     keyHelpButton: '❓ 如何获取 OpenAI API key？', firstTimeHelp: '❓ 第一次使用？看看如何准备 OpenAI API key', helpClose: '明白',
     helpTitle: '如何申请 OpenAI API key？',
     helpIntro: 'API key 就像一把专属钥匙：App 用它帮你连接 OpenAI 翻译，费用直接计入你自己的 OpenAI 账户，不会用到别人的钱。注意：ChatGPT Plus 订阅与 API 分开收费，即使有 Plus 也要另外充值。大约 5 分钟即可完成。',
@@ -123,6 +125,7 @@ const STRINGS = {
     exportTitle: '实时传译字幕',
   },
   en: {
+    jumpLatest: '⬇ Latest',
     keyHelpButton: '❓ How do I get an OpenAI API key?', firstTimeHelp: '❓ First time? How to get an OpenAI API key', helpClose: 'Got it',
     helpTitle: 'How to get an OpenAI API key',
     helpIntro: 'An API key is like a personal key: the app uses it to connect to OpenAI for translation, and usage is billed to your own OpenAI account. Note: a ChatGPT Plus subscription is billed separately from the API, so you still need to add API credit. It takes about 5 minutes.',
@@ -469,23 +472,61 @@ const FLUSH_TIMEOUT_MS = 4000;   // how long to wait for the last segment after 
 const IDLE_STOP_MS = 3 * 60_000;  // auto-stop after this much silence
 const RETRY_DELAYS = [1000, 3000, 6000, 10000];
 
+// Each box keeps its text as paragraphs and only ever touches the newest one, so long
+// sessions stay fast (no re-reading of the whole transcript per delta).
+function makeBox(box, jumpButton) {
+  const entry = { el: box, jump: jumpButton, last: 0, node: null, hasText: false, follow: true, scrollQueued: false };
+  box.addEventListener('scroll', () => {
+    // Follow new text only while the reader is at (or near) the bottom.
+    entry.follow = box.scrollHeight - box.clientHeight - box.scrollTop < 48;
+    entry.jump.hidden = entry.follow;
+  }, { passive: true });
+  jumpButton.addEventListener('click', () => {
+    entry.follow = true;
+    entry.jump.hidden = true;
+    box.scrollTop = box.scrollHeight;
+  });
+  return entry;
+}
 const boxes = {
-  'session.input_transcript.delta': { el: el.source, last: 0 },
-  'session.output_transcript.delta': { el: el.target, last: 0 },
+  'session.input_transcript.delta': makeBox(el.source, $('#jump-source')),
+  'session.output_transcript.delta': makeBox(el.target, $('#jump-target')),
 };
+function scrollToEnd(entry) {
+  if (!entry.follow || entry.scrollQueued) return;
+  entry.scrollQueued = true;
+  requestAnimationFrame(() => {
+    entry.scrollQueued = false;
+    if (entry.follow) entry.el.scrollTop = entry.el.scrollHeight;
+  });
+}
+function newParagraph(entry, className) {
+  const paragraph = document.createElement('p');
+  if (className) paragraph.className = className;
+  entry.node = document.createTextNode('');
+  paragraph.append(entry.node);
+  entry.el.append(paragraph);
+}
 function appendText(entry, text) {
-  const box = entry.el;
   const now = Date.now();
-  const follow = box.scrollHeight - box.clientHeight - box.scrollTop < 40;
-  if (entry.last && now - entry.last > PARAGRAPH_GAP_MS && box.textContent && !box.textContent.endsWith('\n')) {
-    box.append('\n\n');
-  }
+  if (!entry.node || (entry.last && now - entry.last > PARAGRAPH_GAP_MS && entry.node.length)) newParagraph(entry);
   entry.last = now;
-  box.append(text);
-  if (follow) box.scrollTop = box.scrollHeight;
+  entry.node.appendData(entry.node.length ? text : text.replace(/^\s+/, ''));
+  entry.hasText = true;
+  scrollToEnd(entry);
+}
+// A short note line (session separator, language switch), followed by a fresh paragraph.
+function appendNote(entry, text) {
+  newParagraph(entry, 'note-line');
+  entry.node.appendData(text);
+  entry.node = null;
+  scrollToEnd(entry);
+}
+function transcriptText(box) {
+  return [...box.children].map(paragraph => paragraph.textContent).filter(Boolean).join('\n\n');
 }
 function updateTranscriptButtons() {
-  const hasText = Boolean(el.source.textContent || el.target.textContent);
+  const hasText = boxes['session.input_transcript.delta'].hasText || boxes['session.output_transcript.delta'].hasText;
   el.download.disabled = !hasText;
   el.clear.disabled = !hasText || Boolean(recording);
 }
@@ -737,10 +778,10 @@ el.start.addEventListener('click', async () => {
   for (const track of rec.stream.getAudioTracks()) {
     track.addEventListener('ended', () => finish(rec, 'micEnded'));
   }
-  if (el.source.textContent || el.target.textContent) {
-    for (const entry of Object.values(boxes)) if (entry.el.textContent) entry.el.append('\n\n———\n\n');
+  for (const entry of Object.values(boxes)) {
+    if (entry.hasText) appendNote(entry, '———');
+    entry.last = 0;
   }
-  for (const entry of Object.values(boxes)) entry.last = 0;
   requestWakeLock(rec);
   rec.idleTimer = setInterval(() => {
     if (Date.now() - rec.lastSpeech > IDLE_STOP_MS) gracefulStop(rec, 'idleStop');
@@ -781,8 +822,8 @@ el.language.addEventListener('change', () => {
       type: 'session.update',
       session: { audio: { output: { language: el.language.value } } },
     }));
-    appendText(boxes['session.output_transcript.delta'],
-      '\n\n' + t('switchedTo', { lang: LANGUAGE_NAMES[el.language.value] ?? el.language.value }) + '\n\n');
+    appendNote(boxes['session.output_transcript.delta'],
+      t('switchedTo', { lang: LANGUAGE_NAMES[el.language.value] ?? el.language.value }));
   }
 });
 el.noise.addEventListener('change', () => store.set('noise', el.noise.value));
@@ -802,7 +843,7 @@ $('#bigger').addEventListener('click', () => setFontSize(parseFloat(el.target.st
 
 el.download.addEventListener('click', () => {
   const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
-  const text = `${t('exportTitle')} ${stamp}\n\n== ${t('translation')} ==\n${el.target.textContent}\n\n== ${t('original')} ==\n${el.source.textContent}\n`;
+  const text = `${t('exportTitle')} ${stamp}\n\n== ${t('translation')} ==\n${transcriptText(el.target)}\n\n== ${t('original')} ==\n${transcriptText(el.source)}\n`;
   const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
   const link = Object.assign(document.createElement('a'), {
     href: url, download: `interpreter-${stamp.replace(/[: ]/g, '-')}.txt`,
@@ -813,8 +854,11 @@ el.download.addEventListener('click', () => {
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
 });
 el.clear.addEventListener('click', () => {
-  el.source.textContent = '';
-  el.target.textContent = '';
+  for (const entry of Object.values(boxes)) {
+    entry.el.replaceChildren();
+    Object.assign(entry, { node: null, hasText: false, last: 0, follow: true });
+    entry.jump.hidden = true;
+  }
   updateTranscriptButtons();
 });
 
