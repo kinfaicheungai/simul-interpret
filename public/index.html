@@ -101,18 +101,32 @@
       </div>
     </details>
 
+    <div class="mode-switch" role="group" aria-label="mode">
+      <button type="button" id="mode-oneway" aria-pressed="true" data-i18n="modeOneway"></button>
+      <button type="button" id="mode-dialog" aria-pressed="false" data-i18n="modeDialog"></button>
+    </div>
+
     <div class="settings">
-      <label><span data-i18n="translateTo"></span>
+      <label id="lang-single"><span data-i18n="translateTo"></span>
         <select id="language"></select>
       </label>
-      <label><span data-i18n="micDistance"></span>
+      <label id="lang-a" hidden><span data-i18n="langA"></span>
+        <select id="language-a"></select>
+      </label>
+      <label id="lang-b" hidden><span data-i18n="langB"></span>
+        <select id="language-b"></select>
+      </label>
+      <label><span data-i18n="soundSource"></span>
         <select id="noise">
-          <option value="near_field" data-i18n="near"></option>
-          <option value="far_field" data-i18n="far"></option>
-          <option value="off" data-i18n="noiseOff"></option>
+          <option value="near" data-i18n="src_near"></option>
+          <option value="far" data-i18n="src_far"></option>
+          <option value="speaker" data-i18n="src_speaker"></option>
+          <option value="tab" id="opt-tab" data-i18n="src_tab"></option>
         </select>
       </label>
     </div>
+    <p class="hint" id="source-hint"></p>
+    <p class="hint dialog-hint" id="dialog-hint" hidden data-i18n="dialogHint"></p>
 
     <div class="controls">
       <button id="start" class="primary" data-i18n="start"></button>
@@ -120,24 +134,51 @@
       <button id="sound" aria-pressed="false" disabled data-i18n="playVoice"></button>
     </div>
     <p class="statusline"><span id="status" role="status"></span> <span id="clock"></span></p>
+    <div class="meter" aria-hidden="true"><span id="meter-bar"></span></div>
     <audio id="audio" autoplay playsinline muted></audio>
 
-    <section>
-      <div class="section-head">
-        <h2 id="target-title" data-i18n="translation"></h2>
-        <div class="tools">
-          <button id="smaller" aria-label="A−">A−</button>
-          <button id="bigger" aria-label="A+">A+</button>
+    <div id="oneway-view">
+      <section>
+        <div class="section-head">
+          <h2 id="target-title" data-i18n="translation"></h2>
+          <div class="tools">
+            <button type="button" data-font="-0.2" aria-label="A−">A−</button>
+            <button type="button" data-font="0.2" aria-label="A+">A+</button>
+          </div>
         </div>
-      </div>
-      <div class="transcript" id="target" tabindex="0" aria-labelledby="target-title"></div>
-      <button type="button" class="jump" id="jump-target" hidden data-i18n="jumpLatest"></button>
-    </section>
-    <section>
-      <h2 id="source-title" data-i18n="original"></h2>
-      <div class="transcript" id="source" tabindex="0" aria-labelledby="source-title"></div>
-      <button type="button" class="jump" id="jump-source" hidden data-i18n="jumpLatest"></button>
-    </section>
+        <div class="transcript" id="target" tabindex="0" aria-labelledby="target-title"></div>
+        <button type="button" class="jump" id="jump-target" hidden data-i18n="jumpLatest"></button>
+      </section>
+      <section>
+        <h2 id="source-title" data-i18n="original"></h2>
+        <div class="transcript" id="source" tabindex="0" aria-labelledby="source-title"></div>
+        <button type="button" class="jump" id="jump-source" hidden data-i18n="jumpLatest"></button>
+      </section>
+    </div>
+
+    <div id="dialog-view" hidden>
+      <section id="panel-b" class="dialog-panel">
+        <div class="section-head">
+          <h2 id="panel-b-title"></h2>
+          <div class="tools">
+            <button type="button" id="flip-b" data-i18n="flip"></button>
+          </div>
+        </div>
+        <div class="transcript" id="dialog-b" tabindex="0" aria-labelledby="panel-b-title"></div>
+        <button type="button" class="jump" id="jump-b" hidden data-i18n="jumpLatest"></button>
+      </section>
+      <section id="panel-a" class="dialog-panel">
+        <div class="section-head">
+          <h2 id="panel-a-title"></h2>
+          <div class="tools">
+            <button type="button" data-font="-0.2" aria-label="A−">A−</button>
+            <button type="button" data-font="0.2" aria-label="A+">A+</button>
+          </div>
+        </div>
+        <div class="transcript" id="dialog-a" tabindex="0" aria-labelledby="panel-a-title"></div>
+        <button type="button" class="jump" id="jump-a" hidden data-i18n="jumpLatest"></button>
+      </section>
+    </div>
 
     <div class="controls">
       <button id="download" disabled data-i18n="download"></button>

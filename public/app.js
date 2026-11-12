@@ -6,11 +6,23 @@ const el = {
   clear: $('#clear'), source: $('#source'), target: $('#target'), uiLang: $('#ui-lang'),
   account: $('#account'), accountState: $('#account-state'), apiKey: $('#api-key'),
   password: $('#password'), accountMsg: $('#account-msg'), username: $('#username'),
+  langA: $('#language-a'), langB: $('#language-b'), meter: $('#meter-bar'),
 };
 
 // ---------- Interface language ----------
 const STRINGS = {
   'zh-Hant': {
+    modeOneway: '單向傳譯', modeDialog: '對話模式（雙語）', langA: '語言 A（你）', langB: '語言 B（對方）',
+    soundSource: '聲音來源', src_near: '手機咪：講者喺附近', src_far: '手機咪：擺喺枱面／會議室', src_speaker: '喇叭／電話／電視聲', src_tab: '電腦分頁聲音（Chrome 電腦版）',
+    sourceHint_near: '適合講者拎住或者坐喺手機前面。',
+    sourceHint_far: '電話擺喺枱中間，收全場聲音。',
+    sourceHint_speaker: '收另一部機播出嚟嘅聲（電話擴音、電視、電腦喇叭）。會關閉手機自己嘅降噪，避免佢當咗喇叭聲係雜音。',
+    sourceHint_tab: '最清楚：直接收電腦某個分頁嘅聲（YouTube、網上會議）。撳開始後揀分頁，並剔「分享分頁音訊」。',
+    dialogHint: '對話模式會同時開兩條翻譯：每個人講嘢，兩個框都會用各自語言顯示。下面框係你嘅語言，上面框可以撳「反轉」俾對面嘅人睇。只顯示文字（唔播譯音），費用約係單向嘅兩倍。測試功能。',
+    panelFor: '{lang}', flip: '↻ 反轉', sameLanguages: '語言 A 同語言 B 要唔同。',
+    tabWait: '請揀要收聲嘅分頁，並剔「分享分頁音訊」…', tabDenied: '未有分享畫面，已取消。',
+    noTabAudio: '收唔到分頁聲音：分享時要剔「分享分頁音訊」（Share tab audio）。', tabEnded: '已停止分享分頁，收音結束。',
+    noInput: '⚠️ 收唔到聲音：睇下面嘅音量條有冇郁。如果呢部手機同時喺通話或者播片，iPhone 會將咪高峰交俾嗰個 App。',
     jumpLatest: '⬇ 最新',
     keyHelpButton: '❓ 點樣攞 OpenAI API key？', firstTimeHelp: '❓ 第一次用？睇點樣準備 OpenAI API key', helpClose: '明白',
     helpTitle: '點樣申請 OpenAI API key？',
@@ -68,6 +80,17 @@ const STRINGS = {
     exportTitle: '即時傳譯字幕',
   },
   'zh-Hans': {
+    modeOneway: '单向传译', modeDialog: '对话模式（双语）', langA: '语言 A（你）', langB: '语言 B（对方）',
+    soundSource: '声音来源', src_near: '手机麦：讲者在附近', src_far: '手机麦：放在桌面／会议室', src_speaker: '喇叭／电话／电视声', src_tab: '电脑标签页声音（Chrome 电脑版）',
+    sourceHint_near: '适合讲者拿着或坐在手机前面。',
+    sourceHint_far: '手机放在桌子中间，收全场声音。',
+    sourceHint_speaker: '收另一台设备播放的声音（电话免提、电视、电脑喇叭）。会关闭手机自身降噪，避免把喇叭声当成噪音。',
+    sourceHint_tab: '最清晰：直接收电脑某个标签页的声音（YouTube、网上会议）。按开始后选择标签页，并勾选「分享标签页音频」。',
+    dialogHint: '对话模式会同时开两条翻译：每个人说话，两个框都会用各自语言显示。下面框是你的语言，上面框可以按「翻转」给对面的人看。只显示文字（不播放译音），费用约为单向的两倍。测试功能。',
+    panelFor: '{lang}', flip: '↻ 翻转', sameLanguages: '语言 A 和语言 B 需要不同。',
+    tabWait: '请选择要收声的标签页，并勾选「分享标签页音频」…', tabDenied: '未分享画面，已取消。',
+    noTabAudio: '收不到标签页声音：分享时要勾选「分享标签页音频」（Share tab audio）。', tabEnded: '已停止分享标签页，收音结束。',
+    noInput: '⚠️ 收不到声音：看看下面的音量条有没有动。如果这台手机同时在通话或播放视频，iPhone 会把麦克风交给那个 App。',
     jumpLatest: '⬇ 最新',
     keyHelpButton: '❓ 如何获取 OpenAI API key？', firstTimeHelp: '❓ 第一次使用？看看如何准备 OpenAI API key', helpClose: '明白',
     helpTitle: '如何申请 OpenAI API key？',
@@ -125,6 +148,17 @@ const STRINGS = {
     exportTitle: '实时传译字幕',
   },
   en: {
+    modeOneway: 'One-way', modeDialog: 'Conversation (two languages)', langA: 'Language A (you)', langB: 'Language B (other person)',
+    soundSource: 'Sound source', src_near: 'Phone mic: speaker nearby', src_far: 'Phone mic: on the table / meeting room', src_speaker: 'Speaker / phone call / TV', src_tab: 'Computer tab audio (desktop Chrome)',
+    sourceHint_near: 'Best when the speaker holds or sits in front of the phone.',
+    sourceHint_far: 'Phone in the middle of the table, picking up the room.',
+    sourceHint_speaker: 'For sound played by another device (speakerphone, TV, laptop). Turns off the phone’s own noise filters so they do not treat speaker audio as noise.',
+    sourceHint_tab: 'Clearest: captures a browser tab directly (YouTube, online meetings). After Start, pick the tab and tick “Share tab audio”.',
+    dialogHint: 'Conversation mode runs two translations at once: whoever speaks, each box shows it in its own language. The bottom box is your language; flip the top box for the person opposite. Text only (no voice), about twice the cost of one-way. Experimental.',
+    panelFor: '{lang}', flip: '↻ Flip', sameLanguages: 'Language A and Language B must be different.',
+    tabWait: 'Choose the tab to capture and tick “Share tab audio”…', tabDenied: 'Screen sharing was cancelled.',
+    noTabAudio: 'No tab audio: tick “Share tab audio” when sharing.', tabEnded: 'Tab sharing stopped.',
+    noInput: '⚠️ No sound coming in: check whether the level bar below moves. If this phone is on a call or playing video, iPhone gives the microphone to that app.',
     jumpLatest: '⬇ Latest',
     keyHelpButton: '❓ How do I get an OpenAI API key?', firstTimeHelp: '❓ First time? How to get an OpenAI API key', helpClose: 'Got it',
     helpTitle: 'How to get an OpenAI API key',
@@ -217,6 +251,7 @@ function applyUiLang() {
   el.sound.textContent = el.audio.muted ? t('playVoice') : t('mute');
   setStatus(statusState.key, statusState.vars);
   renderAccount();
+  if (el.langA.options.length) { renderMode(); renderSourceHint(); }
 }
 
 // ---------- Account ----------
@@ -488,9 +523,11 @@ function makeBox(box, jumpButton) {
   });
   return entry;
 }
-const boxes = {
-  'session.input_transcript.delta': makeBox(el.source, $('#jump-source')),
-  'session.output_transcript.delta': makeBox(el.target, $('#jump-target')),
+const entries = {
+  source: makeBox(el.source, $('#jump-source')),
+  target: makeBox(el.target, $('#jump-target')),
+  a: makeBox($('#dialog-a'), $('#jump-a')),
+  b: makeBox($('#dialog-b'), $('#jump-b')),
 };
 function scrollToEnd(entry) {
   if (!entry.follow || entry.scrollQueued) return;
@@ -526,28 +563,47 @@ function transcriptText(box) {
   return [...box.children].map(paragraph => paragraph.textContent).filter(Boolean).join('\n\n');
 }
 function updateTranscriptButtons() {
-  const hasText = boxes['session.input_transcript.delta'].hasText || boxes['session.output_transcript.delta'].hasText;
+  const hasText = Object.values(entries).some(entry => entry.hasText);
   el.download.disabled = !hasText;
   el.clear.disabled = !hasText || Boolean(recording);
 }
 
-// ---------- Recording (one mic stream, a chain of OpenAI connections) ----------
+// ---------- Recording ----------
+// One audio stream feeds one or two "lanes". A lane is a chain of OpenAI connections that
+// translates into one target language (one-way mode: 1 lane; conversation mode: 2 lanes,
+// one per language, as OpenAI recommends one session per output language).
 let recording;
+const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const CAN_CAPTURE_TAB = Boolean(navigator.mediaDevices?.getDisplayMedia) && !/Android|iPhone|iPad|iPod/.test(navigator.userAgent) && !IS_IOS;
+// Where the sound comes from decides browser processing and OpenAI noise reduction.
+const SOURCES = {
+  near: { noise: 'near_field', processing: true },
+  far: { noise: 'far_field', processing: true },
+  speaker: { noise: 'off', processing: false }, // phone/TV/laptop speaker: phone-side noise filters can eat it
+  tab: { noise: 'off', processing: false, tab: true }, // computer tab audio, clean digital sound
+};
+const SILENCE_HINT_MS = 8000;
 
 class SessionError extends Error {
   constructor(message, { fatal = false } = {}) { super(message); this.fatal = fatal; }
 }
 
+let mode = 'oneway';
+const allConns = rec => rec.lanes.flatMap(lane => [...lane.conns]);
+
 function finish(rec, key, vars) {
   if (!rec || recording !== rec) return;
   recording = undefined;
-  for (const conn of [...rec.conns]) closeConn(rec, conn);
+  for (const lane of rec.lanes) for (const conn of [...lane.conns]) closeConn(rec, lane, conn);
   clearInterval(rec.clockTimer);
   clearInterval(rec.idleTimer);
-  clearTimeout(rec.retryTimer);
+  clearInterval(rec.meterTimer);
   clearTimeout(rec.stopTimer);
+  for (const lane of rec.lanes) clearTimeout(lane.retryTimer);
   rec.stream?.getTracks().forEach(track => track.stop());
+  rec.audioCtx?.close().catch(() => {});
   rec.wakeLock?.release().catch(() => {});
+  el.meter.style.transform = 'scaleX(0)';
   el.audio.pause();
   el.audio.srcObject = null;
   el.audio.muted = true;
@@ -557,12 +613,12 @@ function finish(rec, key, vars) {
   el.sound.disabled = true;
   el.sound.setAttribute('aria-pressed', 'false');
   el.sound.textContent = t('playVoice');
-  el.noise.disabled = false;
+  setControlsLocked(false);
   setStatus(key, vars);
   updateTranscriptButtons();
 }
 
-function closeConn(rec, conn) {
+function closeConn(rec, lane, conn) {
   if (conn.closed) return;
   conn.closed = true;
   clearTimeout(conn.connectTimer);
@@ -570,18 +626,18 @@ function closeConn(rec, conn) {
   clearTimeout(conn.flushTimer);
   conn.abort.abort();
   try { conn.peer.close(); } catch {}
-  rec.conns.delete(conn);
-  if (rec.current === conn) rec.current = undefined;
-  if (rec.stopping && rec.conns.size === 0) finish(rec, rec.stopKey);
+  lane.conns.delete(conn);
+  if (lane.current === conn) lane.current = undefined;
+  if (rec.stopping && allConns(rec).length === 0) finish(rec, rec.stopKey);
 }
 
 // Ask OpenAI to flush what it already heard, then close.
-function retire(rec, conn) {
+function retire(rec, lane, conn) {
   if (conn.closed) return;
-  if (conn.channel.readyState !== 'open') return closeConn(rec, conn);
+  if (conn.channel.readyState !== 'open') return closeConn(rec, lane, conn);
   conn.retiring = true;
-  try { conn.channel.send(JSON.stringify({ type: 'session.close' })); } catch { return closeConn(rec, conn); }
-  conn.flushTimer = setTimeout(() => closeConn(rec, conn), FLUSH_TIMEOUT_MS);
+  try { conn.channel.send(JSON.stringify({ type: 'session.close' })); } catch { return closeConn(rec, lane, conn); }
+  conn.flushTimer = setTimeout(() => closeConn(rec, lane, conn), FLUSH_TIMEOUT_MS);
 }
 
 function gracefulStop(rec, key) {
@@ -589,83 +645,84 @@ function gracefulStop(rec, key) {
   if (rec.stopping) return finish(rec, key);
   rec.stopping = true;
   rec.stopKey = key;
-  clearTimeout(rec.retryTimer);
+  for (const lane of rec.lanes) clearTimeout(lane.retryTimer);
   rec.stream?.getAudioTracks().forEach(track => { track.enabled = false; });
   el.stop.textContent = t('stopNow');
   setStatus('finishing');
-  for (const conn of [...rec.conns]) retire(rec, conn);
-  if (rec.conns.size === 0) return finish(rec, key);
+  for (const lane of rec.lanes) for (const conn of [...lane.conns]) retire(rec, lane, conn);
+  if (allConns(rec).length === 0) return finish(rec, key);
   rec.stopTimer = setTimeout(() => finish(rec, key), FLUSH_TIMEOUT_MS + 500);
 }
 
-function connectionLost(rec, conn) {
+function connectionLost(rec, lane, conn) {
   if (conn.closed || recording !== rec) return;
-  const wasCurrent = rec.current === conn;
+  const wasCurrent = lane.current === conn;
   const wasPending = !conn.ready;
   const retiring = conn.retiring;
-  closeConn(rec, conn);
+  closeConn(rec, lane, conn);
   if (rec.stopping || retiring) return;
-  if (wasCurrent || (wasPending && !rec.current)) scheduleReconnect(rec);
-  else if (wasPending) scheduleRollover(rec, 30_000); // handover failed; old one still runs
+  if (wasCurrent || (wasPending && !lane.current)) scheduleReconnect(rec, lane);
+  else if (wasPending) scheduleRollover(rec, lane, 30_000); // handover failed; old one still runs
 }
 
-function scheduleReconnect(rec) {
-  if (recording !== rec || rec.stopping || rec.retryTimer) return;
-  const attempt = ++rec.retries;
+function scheduleReconnect(rec, lane) {
+  if (recording !== rec || rec.stopping || lane.retryTimer) return;
+  const attempt = ++lane.retries;
   if (attempt > RETRY_DELAYS.length) return finish(rec, 'gaveUp');
   setStatus('reconnecting', { n: attempt });
-  rec.retryTimer = setTimeout(() => {
-    rec.retryTimer = undefined;
-    openConnection(rec);
+  lane.retryTimer = setTimeout(() => {
+    lane.retryTimer = undefined;
+    openConnection(rec, lane);
   }, RETRY_DELAYS[attempt - 1]);
 }
 
-function scheduleRollover(rec, delay) {
-  const conn = rec.current;
+function scheduleRollover(rec, lane, delay) {
+  const conn = lane.current;
   if (!conn) return;
   clearTimeout(conn.rolloverTimer);
   conn.rolloverTimer = setTimeout(() => {
-    if (recording === rec && !rec.stopping && rec.current === conn) openConnection(rec);
+    if (recording === rec && !rec.stopping && lane.current === conn) openConnection(rec, lane);
   }, delay);
 }
 
-function makeCurrent(rec, conn) {
-  const previous = rec.current;
-  rec.current = conn;
-  rec.retries = 0;
-  rec.hadLive = true;
-  if (conn.remoteTrack) el.audio.srcObject = new MediaStream([conn.remoteTrack]);
+function makeCurrent(rec, lane, conn) {
+  const previous = lane.current;
+  lane.current = conn;
+  lane.retries = 0;
+  lane.hadLive = true;
+  if (lane.audio && conn.remoteTrack) el.audio.srcObject = new MediaStream([conn.remoteTrack]);
   // Start a fresh connection a little before this one reaches the limit.
-  scheduleRollover(rec, Math.max(60_000, serverConfig.maxMinutes * 60_000 - 30_000));
-  if (previous && previous !== conn) retire(rec, previous);
-  setStatus('live');
+  scheduleRollover(rec, lane, Math.max(60_000, serverConfig.maxMinutes * 60_000 - 30_000));
+  if (previous && previous !== conn) retire(rec, lane, previous);
+  if (rec.lanes.every(other => other.current)) setStatus('live');
 }
 
-async function openConnection(rec) {
+async function openConnection(rec, lane) {
   if (recording !== rec || rec.stopping) return;
   const account = getAccount();
   if (!account) return finish(rec, 'needAccount');
   const conn = { abort: new AbortController() };
   const peer = new RTCPeerConnection();
   conn.peer = peer;
-  rec.conns.add(conn);
-  conn.connectTimer = setTimeout(() => connectionLost(rec, conn), 30_000);
+  lane.conns.add(conn);
+  conn.connectTimer = setTimeout(() => connectionLost(rec, lane, conn), 30_000);
   for (const track of rec.stream.getAudioTracks()) peer.addTrack(track, rec.stream);
 
   peer.addEventListener('track', event => {
     if (event.track.kind !== 'audio') return;
     conn.remoteTrack = event.track;
-    if (rec.current === conn) el.audio.srcObject = new MediaStream([event.track]);
+    if (!lane.audio) return;
+    if (lane.current === conn) el.audio.srcObject = new MediaStream([event.track]);
     el.sound.disabled = false;
   });
   peer.addEventListener('connectionstatechange', () => {
     const state = peer.connectionState;
-    if (state === 'failed' || state === 'closed') connectionLost(rec, conn);
-    else if (state === 'disconnected' && rec.current === conn && !rec.stopping) {
+    if (state === 'failed' || state === 'closed') connectionLost(rec, lane, conn);
+    else if (state === 'disconnected' && lane.current === conn && !rec.stopping) {
       // Often transient on mobile networks; give it a moment before replacing it.
       setStatus('unstable');
-      setTimeout(() => { if (peer.connectionState === 'disconnected') connectionLost(rec, conn); }, 5000);
-    } else if (state === 'connected' && rec.current === conn && !rec.stopping) setStatus('live');
+      setTimeout(() => { if (peer.connectionState === 'disconnected') connectionLost(rec, lane, conn); }, 5000);
+    } else if (state === 'connected' && lane.current === conn && !rec.stopping) setStatus('live');
   });
 
   const channel = peer.createDataChannel('oai-events');
@@ -674,25 +731,27 @@ async function openConnection(rec) {
     if (conn.closed || recording !== rec) return;
     clearTimeout(conn.connectTimer);
     conn.ready = true;
-    if (rec.stopping) return retire(rec, conn);
+    if (rec.stopping) return retire(rec, lane, conn);
     if (!rec.clockTimer) startClock(rec);
-    makeCurrent(rec, conn);
+    makeCurrent(rec, lane, conn);
   });
-  channel.addEventListener('close', () => connectionLost(rec, conn));
+  channel.addEventListener('close', () => connectionLost(rec, lane, conn));
   channel.addEventListener('message', event => {
     if (recording !== rec) return;
     let data;
     try { data = JSON.parse(event.data); } catch { return; }
-    if (data.type === 'session.closed') { if (conn.retiring) closeConn(rec, conn); else connectionLost(rec, conn); return; }
+    if (data.type === 'session.closed') { if (conn.retiring) closeConn(rec, lane, conn); else connectionLost(rec, lane, conn); return; }
     if (data.type === 'error') {
       // Before the first successful connection, show the error. Later ones are logged only;
       // if the session really died, the channel closes and we reconnect.
       console.warn('Realtime error', data.error);
-      if (!rec.hadLive) { closeConn(rec, conn); finish(rec, 'serviceError', { detail: data.error?.message ?? '' }); }
+      if (!lane.hadLive) { closeConn(rec, lane, conn); finish(rec, 'serviceError', { detail: data.error?.message ?? '' }); }
       return;
     }
-    const entry = boxes[data.type];
-    if (entry && typeof data.delta === 'string') {
+    if (typeof data.delta !== 'string') return;
+    const entry = data.type === 'session.output_transcript.delta' ? lane.out
+      : data.type === 'session.input_transcript.delta' ? lane.in : null;
+    if (entry) {
       appendText(entry, data.delta);
       rec.lastSpeech = Date.now();
       updateTranscriptButtons();
@@ -704,7 +763,7 @@ async function openConnection(rec) {
     const secretResponse = await fetch('/session', {
       method: 'POST',
       headers: { 'X-Interpreter-Request': 'start', 'Content-Type': 'application/json', ...authHeaders(account) },
-      body: JSON.stringify({ language: el.language.value, noise: el.noise.value }),
+      body: JSON.stringify({ language: lane.target, noise: SOURCES[rec.source].noise }),
       signal: conn.abort.signal,
     });
     if (!secretResponse.ok) {
@@ -728,11 +787,11 @@ async function openConnection(rec) {
   } catch (error) {
     if (conn.closed) return;
     console.warn('Connection attempt failed', error);
-    if (error.fatal || !rec.hadLive) {
-      closeConn(rec, conn);
+    if (error.fatal || !lane.hadLive) {
+      closeConn(rec, lane, conn);
       return finish(rec, 'serviceError', { detail: error.message || t('err_generic') });
     }
-    connectionLost(rec, conn);
+    connectionLost(rec, lane, conn);
   }
 }
 
@@ -755,46 +814,111 @@ async function requestWakeLock(rec) {
   } catch { /* Not supported or denied; the session still works. */ }
 }
 
+// Live input level, so people can see whether any sound reaches the app at all.
+function startMeter(rec) {
+  if (!rec.audioCtx) return;
+  try {
+    const analyser = rec.audioCtx.createAnalyser();
+    analyser.fftSize = 1024;
+    rec.audioCtx.createMediaStreamSource(rec.stream).connect(analyser);
+    rec.audioCtx.resume().catch(() => {});
+    const samples = new Float32Array(analyser.fftSize);
+    rec.lastSound = Date.now();
+    rec.meterTimer = setInterval(() => {
+      analyser.getFloatTimeDomainData(samples);
+      let sum = 0;
+      for (const value of samples) sum += value * value;
+      const rms = Math.sqrt(sum / samples.length);
+      const level = Math.min(1, Math.max(0, (20 * Math.log10(rms + 1e-9) + 60) / 50));
+      el.meter.style.transform = `scaleX(${level.toFixed(3)})`;
+      const now = Date.now();
+      if (rms > 0.006) {
+        rec.lastSound = now;
+        if (statusState.key === 'noInput') setStatus('live');
+      } else if (now - rec.lastSound > SILENCE_HINT_MS && statusState.key === 'live') {
+        setStatus('noInput');
+      }
+    }, 100);
+  } catch (error) { console.warn('Level meter unavailable', error); }
+}
+
+async function getAudioStream(source) {
+  if (SOURCES[source].tab) {
+    const stream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+      systemAudio: 'include',
+    });
+    for (const track of stream.getVideoTracks()) { track.stop(); stream.removeTrack(track); }
+    if (!stream.getAudioTracks().length) throw Object.assign(new Error('no tab audio'), { name: 'NoTabAudio' });
+    return stream;
+  }
+  const processing = SOURCES[source].processing;
+  return navigator.mediaDevices.getUserMedia({
+    audio: { echoCancellation: processing, noiseSuppression: processing, autoGainControl: true },
+  });
+}
+
+function setControlsLocked(locked) {
+  el.noise.disabled = locked;
+  el.langA.disabled = locked;
+  el.langB.disabled = locked;
+  for (const button of document.querySelectorAll('.mode-switch button')) button.disabled = locked;
+}
+
 el.start.addEventListener('click', async () => {
   if (recording) return;
   if (!getAccount()) { el.account.open = true; setStatus('needAccount'); return; }
-  if (!navigator.mediaDevices?.getUserMedia || !window.RTCPeerConnection) { setStatus('noSupport'); return; }
-  const rec = { conns: new Set(), retries: 0, lastSpeech: Date.now() };
+  const source = el.noise.value in SOURCES ? el.noise.value : 'near';
+  if (!window.RTCPeerConnection || (SOURCES[source].tab ? !CAN_CAPTURE_TAB : !navigator.mediaDevices?.getUserMedia)) {
+    setStatus('noSupport'); return;
+  }
+  if (mode === 'dialog' && el.langA.value === el.langB.value) { setStatus('sameLanguages'); return; }
+  const lane = (target, out, input, audio) => ({ target, out, in: input, audio, conns: new Set(), retries: 0 });
+  const rec = {
+    source, lastSpeech: Date.now(),
+    lanes: mode === 'dialog'
+      ? [lane(el.langA.value, entries.a, null, false), lane(el.langB.value, entries.b, null, false)]
+      : [lane(el.language.value, entries.target, entries.source, true)],
+  };
   recording = rec;
+  // Create the audio context inside the tap, so iOS allows it to run.
+  try { rec.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch {}
   el.start.disabled = true;
   el.stop.disabled = false;
-  el.noise.disabled = true;
+  setControlsLocked(true);
   el.clock.textContent = '';
   updateTranscriptButtons();
-  setStatus('micWait');
+  setStatus(SOURCES[source].tab ? 'tabWait' : 'micWait');
   try {
-    rec.stream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-    });
+    rec.stream = await getAudioStream(source);
   } catch (error) {
-    return finish(rec, error.name === 'NotAllowedError' ? 'micDenied' : 'noSupport');
+    return finish(rec, error.name === 'NoTabAudio' ? 'noTabAudio'
+      : error.name === 'NotAllowedError' ? (SOURCES[source].tab ? 'tabDenied' : 'micDenied') : 'noSupport');
   }
   if (recording !== rec) { rec.stream.getTracks().forEach(track => track.stop()); return; }
   for (const track of rec.stream.getAudioTracks()) {
-    track.addEventListener('ended', () => finish(rec, 'micEnded'));
+    track.addEventListener('ended', () => finish(rec, SOURCES[source].tab ? 'tabEnded' : 'micEnded'));
   }
-  for (const entry of Object.values(boxes)) {
+  for (const entry of rec.lanes.flatMap(each => [each.out, each.in]).filter(Boolean)) {
     if (entry.hasText) appendNote(entry, '———');
     entry.last = 0;
   }
+  startMeter(rec);
   requestWakeLock(rec);
   rec.idleTimer = setInterval(() => {
     if (Date.now() - rec.lastSpeech > IDLE_STOP_MS) gracefulStop(rec, 'idleStop');
   }, 15_000);
   setStatus('connecting');
-  openConnection(rec);
+  for (const each of rec.lanes) openConnection(rec, each);
 });
 
 el.stop.addEventListener('click', () => gracefulStop(recording, 'stopped'));
 window.addEventListener('pagehide', () => finish(recording, 'stopped'));
 document.addEventListener('visibilitychange', () => {
   // iOS suspends the microphone in the background, so end cleanly instead of hanging.
-  if (document.hidden) finish(recording, 'hidden');
+  // Desktop browsers keep capturing (needed for tab audio, where the user switches tabs).
+  if (document.hidden && IS_IOS) finish(recording, 'hidden');
 });
 
 el.sound.addEventListener('click', async () => {
@@ -815,35 +939,70 @@ el.sound.addEventListener('click', async () => {
 
 el.language.addEventListener('change', () => {
   store.set('language', el.language.value);
-  const conn = recording?.current;
+  const lane = recording?.lanes.length === 1 ? recording.lanes[0] : null;
+  const conn = lane?.current;
   // Switch the target language of the running connection without reconnecting.
   if (conn?.channel.readyState === 'open' && !recording.stopping) {
+    lane.target = el.language.value;
     conn.channel.send(JSON.stringify({
       type: 'session.update',
       session: { audio: { output: { language: el.language.value } } },
     }));
-    appendNote(boxes['session.output_transcript.delta'],
-      t('switchedTo', { lang: LANGUAGE_NAMES[el.language.value] ?? el.language.value }));
+    appendNote(entries.target, t('switchedTo', { lang: LANGUAGE_NAMES[el.language.value] ?? el.language.value }));
   }
 });
-el.noise.addEventListener('change', () => store.set('noise', el.noise.value));
+el.noise.addEventListener('change', () => { store.set('source', el.noise.value); renderSourceHint(); });
+el.langA.addEventListener('change', () => { store.set('langA', el.langA.value); renderMode(); });
+el.langB.addEventListener('change', () => { store.set('langB', el.langB.value); renderMode(); });
 el.uiLang.addEventListener('change', () => {
   uiLang = el.uiLang.value;
   store.set('uiLang', uiLang);
   applyUiLang();
 });
 
+// ---------- Mode (one-way / conversation) ----------
+function renderSourceHint() {
+  $('#source-hint').textContent = t('sourceHint_' + el.noise.value);
+}
+function renderMode() {
+  $('#mode-oneway').setAttribute('aria-pressed', String(mode === 'oneway'));
+  $('#mode-dialog').setAttribute('aria-pressed', String(mode === 'dialog'));
+  $('#oneway-view').hidden = mode !== 'oneway';
+  $('#dialog-view').hidden = mode !== 'dialog';
+  $('#lang-single').hidden = mode !== 'oneway';
+  $('#lang-a').hidden = mode !== 'dialog';
+  $('#lang-b').hidden = mode !== 'dialog';
+  $('#dialog-hint').hidden = mode !== 'dialog';
+  const name = code => LANGUAGE_NAMES[code] ?? code;
+  $('#panel-a-title').textContent = t('panelFor', { lang: name(el.langA.value) });
+  $('#panel-b-title').textContent = t('panelFor', { lang: name(el.langB.value) });
+  $('#panel-b').classList.toggle('flipped', store.get('flipB') === '1');
+}
+for (const [id, value] of [['#mode-oneway', 'oneway'], ['#mode-dialog', 'dialog']]) {
+  $(id).addEventListener('click', () => { mode = value; store.set('mode-view', value); renderMode(); });
+}
+$('#flip-b').addEventListener('click', () => {
+  store.set('flipB', store.get('flipB') === '1' ? '0' : '1');
+  renderMode();
+});
+
 function setFontSize(rem) {
   const size = Math.min(2.6, Math.max(0.9, rem));
-  el.target.style.fontSize = size + 'rem';
+  for (const box of [el.target, entries.a.el, entries.b.el]) box.style.fontSize = size + 'rem';
   store.set('fontSize', String(size));
 }
-$('#smaller').addEventListener('click', () => setFontSize(parseFloat(el.target.style.fontSize || '1.3') - 0.2));
-$('#bigger').addEventListener('click', () => setFontSize(parseFloat(el.target.style.fontSize || '1.3') + 0.2));
+for (const button of document.querySelectorAll('[data-font]')) {
+  button.addEventListener('click', () => setFontSize(parseFloat(el.target.style.fontSize || '1.3') + Number(button.dataset.font)));
+}
 
 el.download.addEventListener('click', () => {
   const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
-  const text = `${t('exportTitle')} ${stamp}\n\n== ${t('translation')} ==\n${transcriptText(el.target)}\n\n== ${t('original')} ==\n${transcriptText(el.source)}\n`;
+  const name = code => LANGUAGE_NAMES[code] ?? code;
+  const sections = [
+    [t('translation'), entries.target], [t('original'), entries.source],
+    [t('panelFor', { lang: name(el.langA.value) }), entries.a], [t('panelFor', { lang: name(el.langB.value) }), entries.b],
+  ].filter(([, entry]) => entry.hasText).map(([title, entry]) => `== ${title} ==\n${transcriptText(entry.el)}`);
+  const text = `${t('exportTitle')} ${stamp}\n\n${sections.join('\n\n')}\n`;
   const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
   const link = Object.assign(document.createElement('a'), {
     href: url, download: `interpreter-${stamp.replace(/[: ]/g, '-')}.txt`,
@@ -854,7 +1013,7 @@ el.download.addEventListener('click', () => {
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
 });
 el.clear.addEventListener('click', () => {
-  for (const entry of Object.values(boxes)) {
+  for (const entry of Object.values(entries)) {
     entry.el.replaceChildren();
     Object.assign(entry, { node: null, hasText: false, last: 0, follow: true });
     entry.jump.hidden = true;
@@ -868,11 +1027,23 @@ async function init() {
     const response = await fetch('/config');
     if (response.ok) serverConfig = { ...serverConfig, ...(await response.json()) };
   } catch {}
-  for (const code of serverConfig.languages) el.language.append(new Option(LANGUAGE_NAMES[code] ?? code, code));
-  const savedLanguage = store.get('language', 'zh');
-  el.language.value = serverConfig.languages.includes(savedLanguage) ? savedLanguage : 'zh';
-  el.noise.value = store.get('noise', 'near_field');
-  if (!el.noise.value) el.noise.value = 'near_field';
+  for (const select of [el.language, el.langA, el.langB]) {
+    for (const code of serverConfig.languages) select.append(new Option(LANGUAGE_NAMES[code] ?? code, code));
+  }
+  const pick = (key, fallback) => {
+    const saved = store.get(key, fallback);
+    return serverConfig.languages.includes(saved) ? saved : fallback;
+  };
+  el.language.value = pick('language', 'zh');
+  el.langA.value = pick('langA', 'zh');
+  el.langB.value = pick('langB', 'en');
+  // Older versions stored the noise mode; map it to the new sound-source choice.
+  const legacy = { near_field: 'near', far_field: 'far', off: 'speaker' }[store.get('noise')];
+  $('#opt-tab').hidden = !CAN_CAPTURE_TAB;
+  $('#opt-tab').disabled = !CAN_CAPTURE_TAB;
+  const source = store.get('source', legacy ?? 'near');
+  el.noise.value = source in SOURCES && (source !== 'tab' || CAN_CAPTURE_TAB) ? source : 'near';
+  mode = store.get('mode-view') === 'dialog' ? 'dialog' : 'oneway';
   const size = parseFloat(store.get('fontSize', '1.3'));
   if (size) setFontSize(size);
   if (serverConfig.version) $('#version').textContent = 'v' + serverConfig.version;

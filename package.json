@@ -1,6 +1,6 @@
 {
   "name": "simul-interpret",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "private": true,
   "description": "Real-time speech interpreter web app (OpenAI Realtime Translation, WebRTC) on Cloudflare Workers",
   "type": "module",
